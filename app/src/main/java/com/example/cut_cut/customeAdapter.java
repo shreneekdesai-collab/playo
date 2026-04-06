@@ -21,20 +21,15 @@ import java.util.ArrayList;
  */
 public class customeAdapter extends ArrayAdapter<Turfname> {
 
-    // This holds the data we want to show
-    private ArrayList<Turfname> TurfnameArrayList;
-    // Context helps the adapter access resources (like the LayoutInflator)
-    Context context;
-
     /**
      * CONSTRUCTOR: This runs when you create the adapter in MainActivity.
-     * @param context1: The "Activity" where the list is living.
+     * @param turfnameArrayList: The data list.
+     * @param context: The "Activity" where the list is living.
      */
-    public customeAdapter(ArrayList<Turfname> turfnameArrayList, Context context1) {
+    public customeAdapter(ArrayList<Turfname> turfnameArrayList, Context context) {
         // super() tells the parent (ArrayAdapter) which layout to use for each row
-        super(context1, R.layout.itemelayout, turfnameArrayList);
-        this.TurfnameArrayList = turfnameArrayList;
-        this.context = context1;
+        // It also stores the context and list internally.
+        super(context, R.layout.itemelayout, turfnameArrayList);
     }
 
     /**
