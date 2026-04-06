@@ -18,6 +18,7 @@ import java.util.ArrayList;
  * CONCEPT: An Adapter is like a "Translator". 
  * It takes your data (ArrayList of Turfname) and translates it into 
  * visual rows (itemelayout.xml) that the ListView can display.
+ hiiiiiiiii
  */
 public class customeAdapter extends ArrayAdapter<Turfname> {
 
