@@ -1,48 +1,45 @@
 package com.example.cut_cut;
 
-public class product_page {
-    private String name;
-    private double price;
-    private int  turfimg;
-    private double rating;
+import android.content.Intent;
+import android.os.Bundle;
+import android.widget.ImageView;
+import android.widget.RatingBar;
+import android.widget.TextView;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
-    public Turfname(String name, double price, int turfimg, double rating) {
-        this.name = name;
-        this.price = price;
-        this.turfimg = turfimg;
-        this.rating = rating;
-    }
+public class product_page extends AppCompatActivity {
 
-    public String getName() {
-        return name;
-    }
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.product_page);
 
-    public void setName(String name) {
-        this.name = name;
-    }
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
-    public double getPrice() {
-        return price;
-    }
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
 
-    public void setPrice(double price) {
-        this.price = price;
-    }
+        toolbar.setNavigationOnClickListener(v -> finish());
 
-    public int getTurfimg() {
-        return turfimg;
-    }
+        // 🔥 RECEIVE DATA
+        Intent intent = getIntent();
+        String name = intent.getStringExtra("TURF_NAME");
+        String price = intent.getStringExtra("TURF_PRICE");
+        int imageRes = intent.getIntExtra("TURF_IMAGE", R.mipmap.ic_launcher);
+        float rating = intent.getFloatExtra("TURF_RATING", 0.0f);
 
-    public void setTurfimg(int turfimg) {
-        this.turfimg = turfimg;
-    }
+        TextView nameView = findViewById(R.id.turfname);
+        TextView priceView = findViewById(R.id.price);
+        ImageView imageView = findViewById(R.id.product_image);
+        RatingBar ratingBar = findViewById(R.id.ratingBar);
 
-    public double getRating() {
-        return rating;
-    }
-
-    public void setRating(double rating) {
-        this.rating = rating;
+        nameView.setText(name);
+        priceView.setText(price);
+        imageView.setImageResource(imageRes);
+        ratingBar.setRating(rating);
     }
 }
