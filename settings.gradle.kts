@@ -22,6 +22,6 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "CUT-CUT"
+rootProject.name = "PLAYO"
 include(":app")
  

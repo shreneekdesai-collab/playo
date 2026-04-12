@@ -1,4 +1,4 @@
-package com.example.cut_cut;
+package com.example.playo;
 
 import android.content.Context;
 import android.view.LayoutInflater;

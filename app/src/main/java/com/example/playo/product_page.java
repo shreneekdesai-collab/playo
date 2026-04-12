@@ -1,4 +1,4 @@
-package com.example.cut_cut;
+package com.example.playo;
 
 import android.content.Intent;
 import android.os.Bundle;

@@ -1,4 +1,4 @@
-package com.example.cut_cut;
+package com.example.playo;
 
 import org.junit.Test;
 
