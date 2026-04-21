@@ -13,16 +13,16 @@ public class ProductPageActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.product_page);
 
-        // 1. Setup Toolbar with Back Button
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setTitle(""); 
-        }
-
-        // Handle Back Navigation
-        toolbar.setNavigationOnClickListener(v -> finish());
+//        // 1. Setup Toolbar with Back Button
+//        Toolbar toolbar = findViewById(R.id.toolbar);
+//        setSupportActionBar(toolbar);
+//        if (getSupportActionBar() != null) {
+//            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+//            getSupportActionBar().setTitle("");
+//        }
+//
+//        // Handle Back Navigation
+//        toolbar.setNavigationOnClickListener(v -> finish());
 
         // 2. Setup Buttons using IDs from your XML
         Button btnBookNow = findViewById(R.id.btnBookNow);

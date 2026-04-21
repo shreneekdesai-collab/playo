@@ -30,6 +30,7 @@ public class MainActivity extends AppCompatActivity {
         ArrayList<Turfname> turfList = new ArrayList<>();
         turfList.add(new Turfname("Gully Cricket Turf", 500.0, R.mipmap.ic_launcher, 4.5));
         turfList.add(new Turfname("Olympic Football Arena", 1200.0, R.mipmap.ic_launcher, 4.8));
+        turfList.add(new Turfname("Olympic Football Arena", 1200.0, R.mipmap.ic_launcher, 4.8));
 
         ListView listView = findViewById(R.id.listView);
         customeAdapter adapter = new customeAdapter(turfList, this);
