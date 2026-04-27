@@ -49,6 +49,9 @@
                     android:textColor="#666666" />
             </LinearLayout>
 
+            
+
+
             <!-- PINNED: This stays at the top (like a Search Bar) -->
             <androidx.appcompat.widget.Toolbar
                 android:layout_width="match_parent"
@@ -76,5 +79,56 @@
         android:layout_height="match_parent"
         android:nestedScrollingEnabled="true"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
+    <!-- BOTTOM BAR -->
+    <com.google.android.material.bottomappbar.BottomAppBar
+        android:id="@+id/bottomBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:backgroundTint="#FFFFFF"
+        app:hideOnScroll="true"
+        app:fabCradleMargin="0dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:padding="10dp">
+
+            <Button
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="Home"
+                android:textStyle="bold"/>
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="Play"/>
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="Category"/>
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="Account"/>
+
+        </LinearLayout>
+
+    </com.google.android.material.bottomappbar.BottomAppBar>
+
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
