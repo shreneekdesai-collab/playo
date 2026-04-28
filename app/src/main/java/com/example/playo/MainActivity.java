@@ -3,12 +3,15 @@ package com.example.playo;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.ArrayList;
 
@@ -49,5 +52,25 @@ public class MainActivity extends AppCompatActivity {
 
             startActivity(intent);
         });
+        BottomNavigationView bottom=findViewById(R.id.bottomView);
+        bottom.setOnItemSelectedListener(menuItem -> {
+            int itemid= menuItem.getItemId();
+            if (itemid==R.id.Home){
+                Toast.makeText(MainActivity.this,"home clicked",Toast.LENGTH_SHORT).show();
+                return true;}
+//            if (itemid == R.id.Category) {
+//                startActivity(new Intent(MainActivity.this, CategoryActivity.class));
+//                return true;
+//            }
+//
+//            if (itemid == R.id.Profile) {
+//                startActivity(new Intent(MainActivity.this, AccountActivity.class));
+//                return true;
+//            }
+
+            return false;
+        });
     }
+
+
 }
