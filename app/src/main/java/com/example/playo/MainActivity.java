@@ -58,10 +58,10 @@ public class MainActivity extends AppCompatActivity {
             if (itemid==R.id.Home){
                 Toast.makeText(MainActivity.this,"home clicked",Toast.LENGTH_SHORT).show();
                 return true;}
-//            if (itemid == R.id.Category) {
-//                startActivity(new Intent(MainActivity.this, CategoryActivity.class));
-//                return true;
-//            }
+            if (itemid == R.id.Category) {
+                startActivity(new Intent(MainActivity.this, CategoryActivity.class));
+                return true;
+            }
 //
 //            if (itemid == R.id.Profile) {
 //                startActivity(new Intent(MainActivity.this, AccountActivity.class));
