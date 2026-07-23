@@ -2,18 +2,18 @@ package com.example.playo;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.widget.ListView;
 import android.widget.TextView;
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-
 import java.util.ArrayList;
 
-public class Onclick_Category extends AppCompatActivity {
+public class OnclickCategory extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,37 +38,33 @@ public class Onclick_Category extends AppCompatActivity {
         turfList.add(new Turfname("Olympic Football Arena", 1200.0, R.mipmap.ic_launcher, 4.8));
         turfList.add(new Turfname("Olympic Football Arena", 1200.0, R.mipmap.ic_launcher, 4.8));
 
-        ListView listView = findViewById(R.id.listView);
-        customeAdapter adapter = new customeAdapter(turfList, this);
-        listView.setAdapter(adapter);
+        RecyclerView recyclerView = findViewById(R.id.recyclerView);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        // 🔥 CLICK WORKING HERE
-        listView.setOnItemClickListener((parent, view, position, id) -> {
-            Turfname selectedTurf = (Turfname) parent.getItemAtPosition(position);
-
-            Intent intent = new Intent(Onclick_Category.this, product_page.class);
-            intent.putExtra("TURF_NAME", selectedTurf.getName());
-            intent.putExtra("TURF_PRICE", "₹ " + selectedTurf.getPrice() + " / Hour");
-            intent.putExtra("TURF_IMAGE", selectedTurf.getTurfimg());
-            intent.putExtra("TURF_RATING", (float) selectedTurf.getRating());
-
+        CustomAdapter adapter = new CustomAdapter(turfList, turfname -> {
+            Intent intent = new Intent(OnclickCategory.this, ProductPage.class);
+            intent.putExtra("TURF_NAME", turfname.getName());
+            intent.putExtra("TURF_PRICE", "₹ " + turfname.getPrice() + " / Hour");
+            intent.putExtra("TURF_IMAGE", turfname.getTurfimg());
+            intent.putExtra("TURF_RATING", (float) turfname.getRating());
             startActivity(intent);
         });
+        recyclerView.setAdapter(adapter);
 
-        // BOTTOM NAVIGATION LOGIC
         BottomNavigationView bottom = findViewById(R.id.bottomView);
-        bottom.setSelectedItemId(R.id.Category); // Keep Category highlighted
-        
+        bottom.setSelectedItemId(R.id.Category);
+
         bottom.setOnItemSelectedListener(item -> {
             int itemId = item.getItemId();
             if (itemId == R.id.Home) {
-                Intent intent = new Intent(Onclick_Category.this, MainActivity.class);
+                Intent intent = new Intent(OnclickCategory.this, MainActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 startActivity(intent);
                 overridePendingTransition(0, 0);
                 return true;
             } else if (itemId == R.id.Category) {
-                Intent intent = new Intent(Onclick_Category.this, CategoryActivity.class);
+                Intent intent = new Intent(OnclickCategory.this, MainActivity.class);
+                intent.putExtra("SHOW_FRAGMENT", "CATEGORY");
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 startActivity(intent);
                 overridePendingTransition(0, 0);

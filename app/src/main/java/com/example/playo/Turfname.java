@@ -3,9 +3,8 @@ package com.example.playo;
 public class Turfname {
     private String name;
     private double price;
-    private int  turfimg;
+    private int turfimg;
     private double rating;
-
 
     public Turfname(String name, double price, int turfimg, double rating) {
         this.name = name;

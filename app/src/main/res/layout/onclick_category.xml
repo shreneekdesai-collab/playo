@@ -16,13 +16,11 @@
         android:background="#FFFFFF"
         android:elevation="0dp">
 
-        <!-- This layout handles the collapsing/vanishing animation -->
         <com.google.android.material.appbar.CollapsingToolbarLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
-            <!-- PARALLAX: This part vanishes when you scroll down -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -41,8 +39,6 @@
                     android:textStyle="bold" />
             </LinearLayout>
 
-
-            <!-- PINNED: This stays at the top (like a Search Bar) -->
             <androidx.appcompat.widget.Toolbar
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
@@ -60,18 +56,13 @@
         </com.google.android.material.appbar.CollapsingToolbarLayout>
     </com.google.android.material.appbar.AppBarLayout>
 
-    <!-- The ListView.
-         'appbar_scrolling_view_behavior' tells it to stay below the AppBar.
-         'nestedScrollingEnabled' allows it to talk to the AppBarLayout. -->
-    <ListView
-        android:id="@+id/listView"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:nestedScrollingEnabled="true"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
-
-    <!-- BOTTOM BAR -->
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottomView"
         android:layout_width="match_parent"
@@ -79,11 +70,7 @@
         android:layout_gravity="bottom"
         android:background="#FFFFFF"
         app:labelVisibilityMode="labeled"
-
         app:menu="@menu/bottom_menu"
-        app:layout_behavior="@string/hide_bottom_view_on_scroll_behavior">
-
-    </com.google.android.material.bottomnavigation.BottomNavigationView>
-
+        app:layout_behavior="@string/hide_bottom_view_on_scroll_behavior" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

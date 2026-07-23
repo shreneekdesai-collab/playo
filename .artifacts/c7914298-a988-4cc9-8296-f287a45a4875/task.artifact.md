@@ -1,0 +1,5 @@
+- [x] Update `MainActivity.java` to handle fragment intent extras
+- [x] Update `OnclickCategory.java` navigation logic
+- [x] Delete `CategoryActivity.java`
+- [x] Remove `CategoryActivity` from `AndroidManifest.xml`
+- [x] Verify build and navigation

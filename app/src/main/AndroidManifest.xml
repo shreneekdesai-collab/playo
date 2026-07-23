@@ -12,9 +12,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.PLAYO">
 
-        <activity android:name=".product_page" />
-        <activity android:name=".CategoryActivity" />
-        <activity android:name=".Onclick_Category" />
+        <activity android:name=".ProductPage" />
+
+        <activity android:name=".OnclickCategory" />
 
 
         <activity
