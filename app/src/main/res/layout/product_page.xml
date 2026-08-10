@@ -222,4 +222,15 @@
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 
+    <!-- Bottom navigation so Profile is reachable from the turf details page -->
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/productBottomView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:background="@color/surface_white"
+        app:labelVisibilityMode="labeled"
+        app:menu="@menu/bottom_menu"
+        app:tint="@color/colorPrimary" />
+
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

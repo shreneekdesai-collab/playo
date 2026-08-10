@@ -12,21 +12,29 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.PLAYO">
 
-        <activity android:name=".ProductPage" />
-
-        <activity android:name=".OnclickCategory" />
-
-
-        <activity
-            android:name=".MainActivity"
+        <activity android:name=".MainActivity"
             android:exported="true">
-
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
         </activity>
+
+        <activity android:name=".ProductPage" />
+        <activity android:name=".OnclickCategory" />
+
+        <!-- Profile related activities -->
+        <activity android:name=".PersonalDetailsActivity" />
+        <activity android:name=".MyBookingsActivity" />
+        <activity android:name=".BookingDetailsActivity" />
+        <activity android:name=".MyListingsActivity" />
+        <activity android:name=".AddTurfActivity" />
+        <activity android:name=".PaymentHistoryActivity" />
+        <activity android:name=".SettingsActivity" />
+        <activity android:name=".FavoritesActivity" />
+        <activity android:name=".NotificationSettingsActivity" />
+        <activity android:name=".HelpActivity" />
+        <activity android:name=".AboutActivity" />
 
     </application>
 

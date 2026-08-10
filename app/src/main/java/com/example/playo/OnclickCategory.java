@@ -64,7 +64,14 @@ public class OnclickCategory extends AppCompatActivity {
                 return true;
             } else if (itemId == R.id.Category) {
                 Intent intent = new Intent(OnclickCategory.this, MainActivity.class);
-                intent.putExtra("SHOW_FRAGMENT", "CATEGORY");
+                intent.putExtra(MainActivity.EXTRA_SHOW_FRAGMENT, MainActivity.FRAGMENT_CATEGORY);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                startActivity(intent);
+                overridePendingTransition(0, 0);
+                return true;
+            } else if (itemId == R.id.Profile) {
+                Intent intent = new Intent(OnclickCategory.this, MainActivity.class);
+                intent.putExtra(MainActivity.EXTRA_SHOW_FRAGMENT, MainActivity.FRAGMENT_PROFILE);
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 startActivity(intent);
                 overridePendingTransition(0, 0);

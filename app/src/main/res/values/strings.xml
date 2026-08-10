@@ -1,4 +1,96 @@
 <resources>
     <string name="app_name">PLAYO</string>
     <string name="welcome">WELCOME</string>
+
+    <!-- Profile -->
+    <string name="profile_edit_photo">Change photo</string>
+    <string name="profile_bookings">Bookings</string>
+    <string name="profile_bookings_sub">Total bookings made</string>
+    <string name="profile_payments">Payments</string>
+    <string name="profile_payments_sub">Payment history</string>
+    <string name="profile_account">Account</string>
+
+    <!-- Account menu options -->
+    <string name="menu_personal_details">Personal Details</string>
+    <string name="menu_my_turfs">My Turf Listings</string>
+    <string name="menu_booking_history">Booking History</string>
+    <string name="menu_favorites">Favorites</string>
+    <string name="menu_notifications">Notifications</string>
+    <string name="menu_help">Help &amp; Support</string>
+    <string name="menu_about">About</string>
+    <string name="menu_logout">Logout</string>
+
+    <!-- Logout -->
+    <string name="logout_title">Logout</string>
+    <string name="logout_message">Are you sure you want to log out?</string>
+    <string name="logout_confirm">Yes, Logout</string>
+    <string name="cancel">Cancel</string>
+    <string name="logged_out">You have been logged out</string>
+
+    <!-- Personal details -->
+    <string name="personal_details">Personal Details</string>
+    <string name="full_name">Full Name</string>
+    <string name="email">Email</string>
+    <string name="mobile">Mobile Number</string>
+    <string name="gender">Gender</string>
+    <string name="dob">Date of Birth</string>
+    <string name="address">Address</string>
+    <string name="save_changes">Save Changes</string>
+    <string name="profile_saved">Profile saved successfully</string>
+    <string name="fill_required">Please fill all required fields</string>
+
+    <!-- My bookings -->
+    <string name="my_bookings">My Bookings</string>
+    <string name="no_bookings">No bookings yet</string>
+    <string name="booking_date">Date</string>
+    <string name="time_slot">Time Slot</string>
+    <string name="status">Status</string>
+    <string name="amount_paid">Amount Paid</string>
+
+    <!-- Booking details -->
+    <string name="booking_details">Booking Details</string>
+
+    <!-- My listings -->
+    <string name="my_listings">My Turf Listings</string>
+    <string name="price">Price</string>
+    <string name="availability">Availability</string>
+    <string name="rating">Rating</string>
+    <string name="total_bookings">Total Bookings</string>
+    <string name="edit">Edit</string>
+    <string name="delete">Delete</string>
+    <string name="view_details">View Details</string>
+    <string name="add_turf">Add New Turf</string>
+    <string name="no_listings">No turf listings yet</string>
+
+    <!-- Add turf -->
+    <string name="add_turf_title">Add New Turf</string>
+
+    <!-- Payment history -->
+    <string name="payment_history">Payment History</string>
+    <string name="payment_method">Payment Method</string>
+    <string name="no_payments">No payment records</string>
+    <string name="booking_id">Booking ID</string>
+
+    <!-- Settings -->
+    <string name="settings">Settings</string>
+    <string name="appearance">Appearance</string>
+    <string name="dark_mode">Dark Mode</string>
+    <string name="language">Language</string>
+    <string name="preferences">Preferences</string>
+    <string name="notification_settings_title">Notifications</string>
+    <string name="legal">Legal</string>
+    <string name="privacy_policy">Privacy Policy</string>
+    <string name="terms_conditions">Terms &amp; Conditions</string>
+
+    <!-- Simple info screens -->
+    <string name="favorites">Favorites</string>
+    <string name="notification_settings">Notification Settings</string>
+    <string name="help_support">Help &amp; Support</string>
+    <string name="about">About</string>
+    <string name="coming_soon">This feature is coming soon.</string>
+    <string name="favorites_msg">Your favorite turfs will appear here.</string>
+    <string name="notifications_msg">Manage your notification preferences.</string>
+    <string name="help_msg">Reach out to our support team for assistance.</string>
+    <string name="about_msg">PLAYO — Book playgrounds and list your turf for rent.</string>
+    <string name="yes">Yes</string>
 </resources>

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Theme-aware toolbar colors (dark) -->
+    <color name="toolbar_bg">#FF121212</color>
+    <color name="toolbar_fg">#FFFFFFFF</color>
+    <color name="toolbar_icon_bg">#FF26262B</color>
+</resources>
