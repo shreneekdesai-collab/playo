@@ -12,7 +12,7 @@ import java.util.ArrayList;
 
 public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder> {
 
-    private final ArrayList<Turfname> turfnameArrayList;
+    private ArrayList<Turfname> turfnameArrayList;
     private final OnItemClickListener listener;
 
     public interface OnItemClickListener {
@@ -22,6 +22,11 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
     public CustomAdapter(ArrayList<Turfname> turfnameArrayList, OnItemClickListener listener) {
         this.turfnameArrayList = turfnameArrayList;
         this.listener = listener;
+    }
+
+    public void updateList(ArrayList<Turfname> newList) {
+        this.turfnameArrayList = newList;
+        notifyDataSetChanged();
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {

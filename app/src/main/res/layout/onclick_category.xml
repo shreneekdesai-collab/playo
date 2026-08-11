@@ -44,12 +44,6 @@
                 android:layout_height="?attr/actionBarSize"
                 app:layout_collapseMode="pin">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Lets Play"
-                    android:textStyle="bold"
-                    android:textSize="20sp" />
 
             </androidx.appcompat.widget.Toolbar>
 

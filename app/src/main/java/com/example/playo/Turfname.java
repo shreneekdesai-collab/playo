@@ -5,12 +5,14 @@ public class Turfname {
     private double price;
     private int turfimg;
     private double rating;
+    private String location;
 
-    public Turfname(String name, double price, int turfimg, double rating) {
+    public Turfname(String name, double price, int turfimg, double rating, String location) {
         this.name = name;
         this.price = price;
         this.turfimg = turfimg;
         this.rating = rating;
+        this.location = location;
     }
 
     public String getName() {
@@ -43,5 +45,13 @@ public class Turfname {
 
     public void setRating(double rating) {
         this.rating = rating;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
     }
 }

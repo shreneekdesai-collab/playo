@@ -1,13 +1,21 @@
 package com.example.playo;
 
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
+import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 /**
@@ -19,7 +27,30 @@ public class ProductPage extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        EdgeToEdge.enable(this);
         setContentView(R.layout.product_page);
+
+        // --- Edge-to-edge: pad only the toolbar below the status bar,
+        //     hero image stays behind the status bar ---
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.coordinatorRoot), (v, insets) -> {
+            int topInset = insets.getInsets(WindowInsetsCompat.Type.systemBars()).top;
+            Toolbar toolbar = findViewById(R.id.productToolbar);
+            if (toolbar != null) {
+                toolbar.setPadding(toolbar.getPaddingLeft(), topInset, toolbar.getPaddingRight(), toolbar.getPaddingBottom());
+            }
+            return insets;
+        });
+
+        // --- Static toolbar with back arrow ---
+        Toolbar toolbar = findViewById(R.id.productToolbar);
+        if (toolbar != null) {
+            Drawable navIcon = ContextCompat.getDrawable(this, R.drawable.ic_back);
+            if (navIcon != null) {
+                navIcon.setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP);
+                toolbar.setNavigationIcon(navIcon);
+            }
+            toolbar.setNavigationOnClickListener(v -> onBackPressed());
+        }
 
         // --- Read details passed from the list ---
         Intent intent = getIntent();
