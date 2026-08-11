@@ -42,7 +42,9 @@ public class TimeSlotAdapter extends RecyclerView.Adapter<TimeSlotAdapter.SlotVi
     public void onBindViewHolder(@NonNull SlotViewHolder holder, int position) {
         String slot = slotList.get(position);
         holder.slotTimeText.setText(slot);
-        holder.itemView.setSelected(position == selectedPosition);
+        boolean selected = position == selectedPosition;
+        holder.itemView.setSelected(selected);
+        holder.slotTimeText.setSelected(selected);
         holder.itemView.setEnabled(true);
 
         holder.itemView.setOnClickListener(v -> {

@@ -1,27 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/bookSlotRoot"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/screen_bg">
 
-    <!-- Single toolbar — no duplicate toolbar anywhere in this layout -->
-    <com.google.android.material.appbar.MaterialToolbar
-        android:id="@+id/bookSlotToolbar"
-        style="@style/Widget.App.Toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:background="@color/surface_white"
-        android:elevation="4dp"
-        app:navigationIcon="@drawable/ic_back"
-        app:title="Select Slot &amp; Pay"
-        app:titleTextColor="@color/toolbar_fg" />
-
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="?attr/actionBarSize"
         android:clipToPadding="false"
         android:paddingBottom="24dp">
 
@@ -39,7 +27,6 @@
                 android:layout_marginBottom="12dp"
                 android:text="Available Time Slots"
                 android:textColor="@color/text_primary"
-                android:layout_gravity="end"
                 android:textSize="18sp"
                 android:textStyle="bold" />
 
@@ -48,7 +35,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:nestedScrollingEnabled="false"
-                android:paddingVertical="8dp" />
+                android:paddingVertical="8dp"
+                tools:listitem="@layout/item_time_slot" />
 
             <!-- Divider -->
             <View
@@ -72,7 +60,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:nestedScrollingEnabled="false"
-                android:background="@drawable/bg_payment_list" />
+                android:background="@drawable/bg_payment_list"
+                tools:listitem="@layout/item_payment_method" />
 
             <!-- Proceed button -->
             <Button

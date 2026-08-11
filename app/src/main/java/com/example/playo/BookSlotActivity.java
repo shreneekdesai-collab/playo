@@ -1,15 +1,12 @@
 package com.example.playo;
 
 import android.graphics.Color;
-import android.graphics.PorterDuff;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.Toast;
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -17,7 +14,6 @@ import androidx.core.view.WindowInsetsControllerCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import com.google.android.material.appbar.MaterialToolbar;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,27 +32,15 @@ public class BookSlotActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_book_slot);
 
-        // --- Edge-to-edge: pad toolbar below the status bar ---
+        // --- Edge-to-edge: pad the root below the status bar ---
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.bookSlotRoot), (v, insets) -> {
             int topInset = insets.getInsets(WindowInsetsCompat.Type.systemBars()).top;
             Log.d("BookSlotActivity", "WindowInsets topInset=" + topInset);
-            MaterialToolbar toolbar = findViewById(R.id.bookSlotToolbar);
-            if (toolbar != null) {
-                toolbar.setPadding(toolbar.getPaddingLeft(), topInset, toolbar.getPaddingRight(), toolbar.getPaddingBottom());
-            }
+            v.setPadding(v.getPaddingLeft(), topInset, v.getPaddingRight(), v.getPaddingBottom());
             return insets;
         });
 
-        // --- Toolbar back arrow (explicitly tinted so it is always visible) ---
-        MaterialToolbar toolbar = findViewById(R.id.bookSlotToolbar);
-        Drawable navIcon = ContextCompat.getDrawable(this, R.drawable.ic_back);
-        if (navIcon != null) {
-            navIcon.setColorFilter(ContextCompat.getColor(this, R.color.toolbar_fg), PorterDuff.Mode.SRC_ATOP);
-            toolbar.setNavigationIcon(navIcon);
-        }
-        toolbar.setNavigationOnClickListener(v -> getOnBackPressedDispatcher().onBackPressed());
-
-        // --- Status bar: dark icons on the light toolbar background ---
+        // --- Status bar: dark icons on the light background ---
         setupStatusBar();
 
         btnProceedPay = findViewById(R.id.btnProceedPay);

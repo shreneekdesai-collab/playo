@@ -18,7 +18,6 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.widget.Toolbar;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -26,7 +25,6 @@ import androidx.core.widget.NestedScrollView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
@@ -34,7 +32,7 @@ import java.util.ArrayList;
 
 /**
  * Profile screen shown in the bottom navigation "Profile" tab.
- * Features a fixed toolbar, edge-to-edge insets, stat cards, an account menu
+ * Features edge-to-edge insets, stat cards, an account menu
  * and a bottom bar that hides/shows while scrolling.
  */
 public class ProfileFragment extends Fragment {
@@ -43,7 +41,6 @@ public class ProfileFragment extends Fragment {
     private static final String PROFILE_IMAGE_KEY = "profile_image";
 
     private View profileParent;
-    private AppBarLayout profileAppBar;
     private ImageView profileAvatar;
     private TextView profileName;
     private TextView profileEmail;
@@ -73,7 +70,6 @@ public class ProfileFragment extends Fragment {
 
         // --- Bind views ---
         profileParent = view.findViewById(R.id.profileParent);
-        profileAppBar = view.findViewById(R.id.profileAppBar);
         profileAvatar = view.findViewById(R.id.profileAvatar);
         profileName = view.findViewById(R.id.profileName);
         profileEmail = view.findViewById(R.id.profileEmail);
@@ -82,16 +78,10 @@ public class ProfileFragment extends Fragment {
         MaterialCardView cardBookings = view.findViewById(R.id.cardBookings);
         MaterialCardView cardPayments = view.findViewById(R.id.cardPayments);
         FrameLayout avatarWrapper = view.findViewById(R.id.avatarWrapper);
-        Toolbar toolbar = view.findViewById(R.id.profileToolbar);
         RecyclerView menuRecycler = view.findViewById(R.id.profileMenuRecycler);
 
-        // --- Edge-to-edge: keep the toolbar below the status bar ---
-        applySystemBarInsets();
-
-        // --- Toolbar back (goes to previous page / Home, never exits directly) ---
-        toolbar.setNavigationIcon(R.drawable.ic_back);
-        toolbar.setNavigationOnClickListener(v ->
-                requireActivity().getOnBackPressedDispatcher().onBackPressed());
+        // --- Edge-to-edge: pad content below the status bar ---
+        applySystemBarInsets(view);
 
         // --- Load persisted user data + stats ---
         loadUserData();
@@ -121,13 +111,12 @@ public class ProfileFragment extends Fragment {
         imagePickerLauncher.launch(intent);
     }
 
-    /** Pads the app bar with the top status-bar inset (edge-to-edge safe area). */
-    private void applySystemBarInsets() {
+    /** Pads the profile content with the top status-bar inset (edge-to-edge safe area). */
+    private void applySystemBarInsets(View view) {
+        View profileContent = view.findViewById(R.id.profileContent);
         ViewCompat.setOnApplyWindowInsetsListener(profileParent, (v, insets) -> {
             Insets bars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            if (bars.top > 0) {
-                profileAppBar.setPadding(0, bars.top, 0, 0);
-            }
+            profileContent.setPadding(0, bars.top, 0, 0);
             return insets;
         });
         // Force a re-dispatch in case the root container already consumed insets.
@@ -135,10 +124,10 @@ public class ProfileFragment extends Fragment {
 
         // Fallback: pad using the measured status bar height if insets never arrive.
         profileParent.post(() -> {
-            if (profileAppBar.getPaddingTop() == 0) {
+            if (profileContent.getPaddingTop() == 0) {
                 int statusBarHeight = getStatusBarHeight();
                 if (statusBarHeight > 0) {
-                    profileAppBar.setPadding(0, statusBarHeight, 0, 0);
+                    profileContent.setPadding(0, statusBarHeight, 0, 0);
                 }
             }
         });

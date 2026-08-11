@@ -251,7 +251,7 @@
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/productBottomView"
         android:layout_width="match_parent"
-        android:layout_height="45dp"
+        android:layout_height="wrap_content"
         android:layout_gravity="bottom"
         android:background="@color/surface_white"
         app:labelVisibilityMode="labeled"
