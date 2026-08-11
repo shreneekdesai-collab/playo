@@ -19,6 +19,7 @@
             android:layout_height="wrap_content"
             app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
+            <!-- Welcome header (parallax, collapses away) -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -43,14 +44,51 @@
                     android:textAlignment="center"
                     android:textSize="18sp"
                     android:textColor="#666666" />
+
             </LinearLayout>
 
+            <!-- Pinned toolbar with search bar (stays at top) -->
             <androidx.appcompat.widget.Toolbar
+                android:id="@+id/homeToolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 app:layout_collapseMode="pin">
 
+                <LinearLayout
+                    android:id="@+id/toolbarSearchContainer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:paddingHorizontal="16dp"
+                    android:visibility="gone"
+                    android:alpha="0">
 
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_marginEnd="12dp"
+                        android:src="@android:drawable/ic_menu_search"
+                        android:tint="#999999"
+                        android:contentDescription="@string/search" />
+
+                    <androidx.appcompat.widget.AppCompatEditText
+                        android:id="@+id/toolbarSearchInput"
+                        android:layout_width="0dp"
+                        android:layout_height="40dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/search_bar_background"
+                        android:drawablePadding="12dp"
+                        android:gravity="center_vertical"
+                        android:hint="Search turfs, locations..."
+                        android:imeOptions="actionSearch"
+                        android:inputType="text"
+                        android:paddingHorizontal="16dp"
+                        android:textColor="#333333"
+                        android:textColorHint="#999999"
+                        android:textSize="16sp" />
+
+                </LinearLayout>
 
             </androidx.appcompat.widget.Toolbar>
 
@@ -63,26 +101,5 @@
         android:layout_height="match_parent"
         android:nestedScrollingEnabled="true"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
-
-    <!-- Search input overlay -->
-    <androidx.appcompat.widget.AppCompatEditText
-        android:id="@+id/searchInput"
-        android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:layout_margin="16dp"
-        android:layout_gravity="top"
-        android:visibility="gone"
-        android:background="#FFFFFF"
-        android:drawableStart="@android:drawable/ic_menu_search"
-        android:drawablePadding="12dp"
-        android:elevation="4dp"
-        android:gravity="center_vertical"
-        android:hint="Search"
-        android:imeOptions="actionSearch"
-        android:inputType="text"
-        android:paddingHorizontal="16dp"
-        android:textColor="#333333"
-        android:textColorHint="#999999"
-        android:textSize="16sp" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

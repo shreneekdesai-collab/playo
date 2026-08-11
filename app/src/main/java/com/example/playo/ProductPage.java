@@ -5,8 +5,9 @@ import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -15,12 +16,19 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.core.view.WindowInsetsControllerCompat;
+import androidx.viewpager2.widget.ViewPager2;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.tabs.TabLayout;
+import com.google.android.material.tabs.TabLayoutMediator;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
- * Displays the details of a single turf, with book-now / review actions
- * and bottom navigation so the user can reach any tab (including Profile).
+ * Displays the details of a single turf, with book-now / review actions,
+ * a swipeable image gallery (ViewPager2), and bottom navigation.
  */
 public class ProductPage extends AppCompatActivity {
 
@@ -30,10 +38,14 @@ public class ProductPage extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.product_page);
 
+        // --- Status bar: light icons for dark hero image ---
+        setupStatusBar();
+
         // --- Edge-to-edge: pad only the toolbar below the status bar,
         //     hero image stays behind the status bar ---
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.coordinatorRoot), (v, insets) -> {
             int topInset = insets.getInsets(WindowInsetsCompat.Type.systemBars()).top;
+            Log.d("ProductPage", "WindowInsets topInset=" + topInset);
             Toolbar toolbar = findViewById(R.id.productToolbar);
             if (toolbar != null) {
                 toolbar.setPadding(toolbar.getPaddingLeft(), topInset, toolbar.getPaddingRight(), toolbar.getPaddingBottom());
@@ -61,13 +73,14 @@ public class ProductPage extends AppCompatActivity {
 
         TextView nameView = findViewById(R.id.turfname);
         TextView priceView = findViewById(R.id.price);
-        ImageView imageView = findViewById(R.id.product_image);
         RatingBar ratingBar = findViewById(R.id.ratingBar);
 
         nameView.setText(name);
         priceView.setText(price);
-        imageView.setImageResource(imageRes);
         ratingBar.setRating(rating);
+
+        // --- Flipkart-style image gallery (ViewPager2) ---
+        setupImageGallery(imageRes);
 
         // --- Book now ---
         Button btnBookNow = findViewById(R.id.btnBookNow);
@@ -87,20 +100,46 @@ public class ProductPage extends AppCompatActivity {
         setupBottomNavigation();
     }
 
+    /** Sets up the ViewPager2 image gallery with dots indicator. */
+    private void setupImageGallery(int primaryImageRes) {
+        ViewPager2 pager = findViewById(R.id.productImagePager);
+        TabLayout indicator = findViewById(R.id.imageIndicator);
+
+        // Build image list — for now single image wrapped in list.
+        // TODO: Replace with multiple images when backend provides gallery URLs.
+        List<Integer> images = new ArrayList<>();
+        images.add(primaryImageRes);
+
+        ProductImagePagerAdapter adapter = new ProductImagePagerAdapter(images);
+        pager.setAdapter(adapter);
+
+        // Attach dots indicator via TabLayoutMediator
+        new TabLayoutMediator(indicator, pager, (tab, position) -> {
+            // TabLayoutMediator handles selection automatically; no title needed for dots
+        }).attach();
+    }
+
+    private void setupStatusBar() {
+        WindowInsetsControllerCompat controller = WindowCompat.getInsetsController(getWindow(), getWindow().getDecorView());
+        if (controller != null) {
+            controller.setAppearanceLightStatusBars(false);
+        }
+        getWindow().setStatusBarColor(Color.TRANSPARENT);
+        getWindow().setNavigationBarColor(Color.TRANSPARENT);
+    }
+
     /** Sets up the bottom navigation to switch to other main tabs. */
     private void setupBottomNavigation() {
         BottomNavigationView bottomView = findViewById(R.id.productBottomView);
         if (bottomView == null) {
             return;
         }
-        // Highlight the Category tab since this page is part of category flow.
         bottomView.setSelectedItemId(R.id.Category);
 
         bottomView.setOnItemSelectedListener(item -> {
             int itemId = item.getItemId();
             Intent intent = new Intent(ProductPage.this, MainActivity.class);
             if (itemId == R.id.Home) {
-                // no fragment extra -> Home tab
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 startActivity(intent);
                 overridePendingTransition(0, 0);

@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">PLAYO</string>
     <string name="welcome">WELCOME</string>
+    <string name="search">Search</string>
 
     <!-- Profile -->
     <string name="profile_edit_photo">Change photo</string>

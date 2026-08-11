@@ -7,22 +7,20 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AlphaAnimation;
-import android.view.animation.Animation;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.ImageView;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.appcompat.widget.AppCompatEditText;
+import androidx.appcompat.widget.Toolbar;
+import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import java.util.ArrayList;
 
 public class HomeFragment extends Fragment {
 
     private boolean isBottomNavVisible = true;
-    private boolean isSearchVisible = false;
+    private boolean isToolbarSearchVisible = false;
 
     private ArrayList<Turfname> fullTurfList = new ArrayList<>();
     private ArrayList<Turfname> filteredTurfList = new ArrayList<>();
@@ -36,8 +34,9 @@ public class HomeFragment extends Fragment {
         RecyclerView recyclerView = view.findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
 
-        ImageView searchIcon = view.findViewById(R.id.searchIcon);
-        AppCompatEditText searchInput = view.findViewById(R.id.searchInput);
+        AppCompatEditText toolbarSearchInput = view.findViewById(R.id.toolbarSearchInput);
+        View toolbarSearchContainer = view.findViewById(R.id.toolbarSearchContainer);
+        AppBarLayout appBarLayout = view.findViewById(R.id.appBarLayout);
         BottomNavigationView bottomNav = requireActivity().findViewById(R.id.bottomView);
 
         // --- Build full data list ---
@@ -58,6 +57,45 @@ public class HomeFragment extends Fragment {
 
         recyclerView.setAdapter(customAdapter);
 
+        // --- Toolbar search input text watcher ---
+        toolbarSearchInput.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                filterList(s.toString());
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {}
+        });
+
+        // --- AppBarLayout offset listener for Flipkart-style search bar reveal ---
+        appBarLayout.addOnOffsetChangedListener((layout, verticalOffset) -> {
+            int scrollRange = layout.getTotalScrollRange();
+            if (scrollRange == 0) return;
+            float collapsePercent = Math.abs(verticalOffset) / (float) scrollRange;
+
+            // Show search bar when welcome header is ~85-100% collapsed
+            if (collapsePercent >= 0.85f && !isToolbarSearchVisible) {
+                isToolbarSearchVisible = true;
+                toolbarSearchContainer.setVisibility(View.VISIBLE);
+                toolbarSearchContainer.animate()
+                        .alpha(1f)
+                        .setDuration(200)
+                        .start();
+            } else if (collapsePercent < 0.85f && isToolbarSearchVisible) {
+                isToolbarSearchVisible = false;
+                toolbarSearchContainer.animate()
+                        .alpha(0f)
+                        .setDuration(200)
+                        .withEndAction(() -> toolbarSearchContainer.setVisibility(View.GONE))
+                        .start();
+            }
+        });
+
+        // --- Bottom nav auto-hide on scroll (unchanged) ---
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
@@ -76,54 +114,6 @@ public class HomeFragment extends Fragment {
                             .start();
                 }
             }
-        });
-
-        // --- Search icon click: toggle search input ---
-        searchIcon.setOnClickListener(v -> {
-            if (isSearchVisible) {
-                // Hide search input
-                AlphaAnimation fadeOut = new AlphaAnimation(1f, 0f);
-                fadeOut.setDuration(200);
-                fadeOut.setFillAfter(true);
-                fadeOut.setAnimationListener(new Animation.AnimationListener() {
-                    @Override public void onAnimationStart(Animation animation) {}
-                    @Override public void onAnimationEnd(Animation animation) {
-                        searchInput.setVisibility(View.GONE);
-                        searchInput.clearAnimation();
-                        searchInput.setText("");
-                    }
-                    @Override public void onAnimationRepeat(Animation animation) {}
-                });
-                searchInput.startAnimation(fadeOut);
-                isSearchVisible = false;
-            } else {
-                // Show search input
-                searchInput.setVisibility(View.VISIBLE);
-                AlphaAnimation fadeIn = new AlphaAnimation(0f, 1f);
-                fadeIn.setDuration(200);
-                fadeIn.setFillAfter(true);
-                searchInput.startAnimation(fadeIn);
-                searchInput.requestFocus();
-                InputMethodManager imm = (InputMethodManager) requireActivity().getSystemService(android.content.Context.INPUT_METHOD_SERVICE);
-                if (imm != null) {
-                    imm.showSoftInput(searchInput, InputMethodManager.SHOW_IMPLICIT);
-                }
-                isSearchVisible = true;
-            }
-        });
-
-        // --- Search input text watcher ---
-        searchInput.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                filterList(s.toString());
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {}
         });
 
         return view;
