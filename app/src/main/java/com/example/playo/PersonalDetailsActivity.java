@@ -6,11 +6,16 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import androidx.activity.EdgeToEdge;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.imageview.ShapeableImageView;
@@ -53,11 +58,24 @@ public class PersonalDetailsActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        EdgeToEdge.enable(this);
         setContentView(R.layout.activity_personal_details);
 
         // --- Toolbar back navigation ---
         MaterialToolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setNavigationOnClickListener(v -> finish());
+
+        // --- Edge-to-edge: keep the toolbar below the status bar ---
+        final int baseToolbarHeight = toolbar.getLayoutParams().height;
+        ViewCompat.setOnApplyWindowInsetsListener(toolbar, (v, insets) -> {
+            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+            int topInset = systemBars.top;
+            v.setPadding(v.getPaddingLeft(), topInset, v.getPaddingRight(), v.getPaddingBottom());
+            ViewGroup.LayoutParams lp = v.getLayoutParams();
+            lp.height = baseToolbarHeight + topInset;
+            v.setLayoutParams(lp);
+            return insets;
+        });
 
         // --- Bind views ---
         inputLayoutName = findViewById(R.id.inputLayoutName);

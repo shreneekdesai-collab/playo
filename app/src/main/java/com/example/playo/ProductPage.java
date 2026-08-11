@@ -7,6 +7,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.RatingBar;
 import android.widget.TextView;
@@ -15,11 +16,14 @@ import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
+import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.core.view.WindowInsetsControllerCompat;
 import androidx.viewpager2.widget.ViewPager2;
+import com.google.android.material.appbar.AppBarLayout;
+import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
@@ -41,18 +45,6 @@ public class ProductPage extends AppCompatActivity {
         // --- Status bar: light icons for dark hero image ---
         setupStatusBar();
 
-        // --- Edge-to-edge: pad only the toolbar below the status bar,
-        //     hero image stays behind the status bar ---
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.coordinatorRoot), (v, insets) -> {
-            int topInset = insets.getInsets(WindowInsetsCompat.Type.systemBars()).top;
-            Log.d("ProductPage", "WindowInsets topInset=" + topInset);
-            Toolbar toolbar = findViewById(R.id.productToolbar);
-            if (toolbar != null) {
-                toolbar.setPadding(toolbar.getPaddingLeft(), topInset, toolbar.getPaddingRight(), toolbar.getPaddingBottom());
-            }
-            return insets;
-        });
-
         // --- Static toolbar with back arrow ---
         Toolbar toolbar = findViewById(R.id.productToolbar);
         if (toolbar != null) {
@@ -62,6 +54,39 @@ public class ProductPage extends AppCompatActivity {
                 toolbar.setNavigationIcon(navIcon);
             }
             toolbar.setNavigationOnClickListener(v -> onBackPressed());
+
+            // --- Edge-to-edge: grow the toolbar by the status-bar height so its
+            //     content never merges with the status bar. The listener is
+            //     attached to the coordinator root (not the toolbar) because the
+            //     AppBarLayout/CollapsingToolbarLayout consume insets before the
+            //     toolbar is reached. ---
+            final int baseToolbarHeight = toolbar.getLayoutParams().height;
+            ViewCompat.setOnApplyWindowInsetsListener(
+                    findViewById(R.id.coordinatorRoot), (v, insets) -> {
+                        Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+                        int topInset = systemBars.top;
+                        Log.d("ProductPage", "WindowInsets topInset=" + topInset);
+                        View toolbarView = findViewById(R.id.productToolbar);
+                        if (toolbarView != null) {
+                            toolbarView.setPadding(toolbarView.getPaddingLeft(), topInset,
+                                    toolbarView.getPaddingRight(), toolbarView.getPaddingBottom());
+                            ViewGroup.LayoutParams lp = toolbarView.getLayoutParams();
+                            lp.height = baseToolbarHeight + topInset;
+                            toolbarView.setLayoutParams(lp);
+                        }
+                        return insets;
+                    });
+        }
+
+        // --- Flip status-bar/back-arrow icons when the app bar collapses:
+        //     white over the dark hero image, dark over the light toolbar scrim ---
+        AppBarLayout appBarLayout = findViewById(R.id.appBarLayout);
+        if (appBarLayout != null && toolbar != null) {
+            appBarLayout.addOnOffsetChangedListener((appBar, verticalOffset) -> {
+                boolean collapsed = Math.abs(verticalOffset)
+                        >= appBar.getHeight() - appBar.getTotalScrollRange();
+                applyTopBarStyle(collapsed);
+            });
         }
 
         // --- Read details passed from the list ---
@@ -130,6 +155,23 @@ public class ProductPage extends AppCompatActivity {
         }
         getWindow().setStatusBarColor(Color.TRANSPARENT);
         getWindow().setNavigationBarColor(Color.TRANSPARENT);
+    }
+
+    /** Applies the correct status-bar/back-arrow icon style for the app bar state.
+     *  expanded=true (over the dark hero image)  -> white icons.
+     *  collapsed=true (over the light toolbar)   -> dark icons. */
+    private void applyTopBarStyle(boolean collapsed) {
+        WindowInsetsControllerCompat controller = WindowCompat.getInsetsController(getWindow(), getWindow().getDecorView());
+        if (controller != null) {
+            controller.setAppearanceLightStatusBars(collapsed);
+        }
+        Toolbar toolbar = findViewById(R.id.productToolbar);
+        if (toolbar != null) {
+            Drawable navIcon = toolbar.getNavigationIcon();
+            if (navIcon != null) {
+                navIcon.setColorFilter(collapsed ? Color.BLACK : Color.WHITE, PorterDuff.Mode.SRC_ATOP);
+            }
+        }
     }
 
     /** Sets up the bottom navigation to switch to other main tabs. */
