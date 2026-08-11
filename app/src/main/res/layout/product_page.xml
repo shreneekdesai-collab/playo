@@ -15,6 +15,7 @@
         android:layout_height="350dp"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
+
 <com.google.android.material.appbar.CollapsingToolbarLayout
             android:id="@+id/collapsing_toolbar"
             android:layout_width="match_parent"
@@ -23,6 +24,7 @@
             app:expandedTitleMarginEnd="65dp"
             app:expandedTitleMarginStart="48dp"
             app:layout_scrollFlags="scroll|exitUntilCollapsed">
+
 
             <!-- Flipkart-style swipeable image gallery (ViewPager2) -->
             <androidx.viewpager2.widget.ViewPager2
@@ -42,8 +44,13 @@
                 app:tabGravity="center"
                 app:tabIndicatorHeight="0dp" />
 
-
-
+            <!-- Status bar scrim: darkens top strip behind status bar & back button -->
+            <View
+                android:id="@+id/statusBarScrim"
+                android:layout_width="match_parent"
+                android:layout_height="120dp"
+                android:background="@drawable/gradient_status_scrim"
+                app:layout_collapseMode="pin" />
 
             <!-- Static pinned toolbar with back arrow -->
             <androidx.appcompat.widget.Toolbar

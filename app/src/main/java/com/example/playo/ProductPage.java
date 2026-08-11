@@ -85,8 +85,12 @@ public class ProductPage extends AppCompatActivity {
         // --- Book now ---
         Button btnBookNow = findViewById(R.id.btnBookNow);
         if (btnBookNow != null) {
-            btnBookNow.setOnClickListener(v ->
-                    Toast.makeText(this, "Proceeding to Booking...", Toast.LENGTH_SHORT).show());
+            btnBookNow.setOnClickListener(v -> {
+                Intent bookIntent = new Intent(ProductPage.this, BookSlotActivity.class);
+                bookIntent.putExtra("TURF_NAME", name);
+                bookIntent.putExtra("TURF_PRICE", price);
+                startActivity(bookIntent);
+            });
         }
 
         // --- Post review ---
