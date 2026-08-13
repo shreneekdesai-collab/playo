@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "814796695620",
+    "project_id": "playzo-f8d8e",
+    "storage_bucket": "playzo-f8d8e.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:814796695620:android:249f44c19421f0911e3411",
+        "android_client_info": {
+          "package_name": "com.example.playo"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCiEFRfD6NbQVahtIPsEdDmOH_L2TOOmrA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

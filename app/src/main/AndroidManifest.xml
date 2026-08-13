@@ -12,7 +12,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.PLAYO">
 
-        <activity android:name=".MainActivity"
+        <activity android:name=".LoginActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -20,6 +20,8 @@
             </intent-filter>
         </activity>
 
+        <activity android:name=".SignupActivity" />
+        <activity android:name=".MainActivity" />
         <activity android:name=".ProductPage" />
         <activity android:name=".OnclickCategory" />
         <activity android:name=".BookSlotActivity" />

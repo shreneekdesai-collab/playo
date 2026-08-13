@@ -28,6 +28,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.google.firebase.auth.FirebaseAuth;
 import java.util.ArrayList;
 
 /**
@@ -221,10 +222,16 @@ public class ProfileFragment extends Fragment {
                 .setTitle(getString(R.string.logout_title))
                 .setMessage(getString(R.string.logout_message))
                 .setPositiveButton(getString(R.string.logout_confirm), (dialog, which) -> {
-                    // Clear locally stored session data, if any.
+                    // Sign out from Firebase and clear locally stored session data.
+                    FirebaseAuth.getInstance().signOut();
                     getContext().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
                             .edit().clear().apply();
                     Toast.makeText(getContext(), getString(R.string.logged_out), Toast.LENGTH_SHORT).show();
+
+                    // Return to the login screen with a cleared back stack.
+                    Intent intent = new Intent(getContext(), LoginActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(intent);
                 })
                 .setNegativeButton(getString(R.string.cancel), null)
                 .show();
