@@ -8,6 +8,7 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+import com.bumptech.glide.Glide;
 import java.util.ArrayList;
 
 public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder> {
@@ -49,6 +50,7 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.itemelayout, parent, false);
+        PressEffect.attach(view);
         return new ViewHolder(view);
     }
 
@@ -58,7 +60,15 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
         if (turfname != null) {
             holder.name.setText(turfname.getName());
             holder.price.setText("₹ " + turfname.getPrice() + " / Hour");
-            holder.image.setImageResource(turfname.getTurfimg());
+            Object imageSource = turfname.getThumbnailBytes() != null
+                    ? turfname.getThumbnailBytes()
+                    : (turfname.getImageUrl() != null && !turfname.getImageUrl().isEmpty()
+                    ? turfname.getImageUrl() : turfname.getTurfimg());
+            Glide.with(holder.image.getContext())
+                    .load(imageSource)
+                    .placeholder(R.mipmap.ic_launcher)
+                    .error(R.mipmap.ic_launcher)
+                    .into(holder.image);
             holder.ratingBar.setRating((float) turfname.getRating());
 
             holder.itemView.setOnClickListener(v -> {

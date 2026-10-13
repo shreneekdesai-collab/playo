@@ -1,0 +1,111 @@
+// Paste into Firebase Console, then Publish.
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    match /users/{uid} {
+      allow read, write: if request.auth != null && request.auth.uid == uid;
+    }
+
+    match /turfs/{turfId} {
+      allow read: if request.auth != null;
+
+      allow create: if request.auth != null
+        && request.resource.data.ownerId == request.auth.uid
+        && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'owner';
+
+      allow update, delete: if request.auth != null
+        && resource.data.ownerId == request.auth.uid;
+
+      allow update: if request.auth != null
+        && request.resource.data.diff(resource.data).affectedKeys()
+           .hasOnly(['rating', 'reviewCount']);
+
+      match /photos/{photoId} {
+        allow read: if request.auth != null;
+        allow write: if request.auth != null
+          && get(/databases/$(database)/documents/turfs/$(turfId)).data.ownerId == request.auth.uid;
+      }
+
+      match /reviews/{reviewId} {
+        allow read: if request.auth != null;
+        allow create, update: if request.auth != null
+          && reviewId == request.auth.uid
+          && request.resource.data.userId == request.auth.uid
+          && request.resource.data.rating is number
+          && request.resource.data.rating >= 1
+          && request.resource.data.rating <= 5;
+        allow delete: if request.auth != null && reviewId == request.auth.uid;
+      }
+
+      match /slots/{slotId} {
+        allow read: if request.auth != null;
+
+        // claim a free slot: hold it
+        allow create: if request.auth != null
+          && request.resource.data.status == 'held'
+          && request.resource.data.heldBy == request.auth.uid
+          && request.resource.data.heldAt == request.time;
+
+        // take over an expired hold
+        allow update: if request.auth != null
+          && resource.data.status == 'held'
+          && resource.data.heldAt + duration.value(5, 'm') < request.time
+          && request.resource.data.status == 'held'
+          && request.resource.data.heldBy == request.auth.uid
+          && request.resource.data.heldAt == request.time;
+
+        // the holder confirms payment while the hold is still valid
+        allow update: if request.auth != null
+          && resource.data.status == 'held'
+          && resource.data.heldBy == request.auth.uid
+          && resource.data.heldAt + duration.value(5, 'm') > request.time
+          && request.resource.data.status == 'booked'
+          && request.resource.data.heldBy == resource.data.heldBy;
+
+        // the holder releases their own hold
+        allow delete: if request.auth != null
+          && resource.data.status == 'held'
+          && resource.data.heldBy == request.auth.uid;
+      }
+    }
+
+    match /bookings/{bookingId} {
+      allow read: if request.auth != null
+        && (resource.data.userId == request.auth.uid
+            || resource.data.ownerId == request.auth.uid);
+      allow create: if request.auth != null
+        && request.resource.data.userId == request.auth.uid;
+    }
+
+    match /payments/{paymentId} {
+      allow read: if request.auth != null
+        && (resource.data.userId == request.auth.uid
+            || resource.data.ownerId == request.auth.uid);
+      allow create: if request.auth != null
+        && request.resource.data.userId == request.auth.uid
+        && request.resource.data.status == 'created';
+      allow update: if request.auth != null
+        && resource.data.userId == request.auth.uid
+        && request.resource.data.userId == resource.data.userId
+        && request.resource.data.ownerId == resource.data.ownerId
+        && request.resource.data.amount == resource.data.amount;
+      match /events/{eventId} {
+        allow read, create: if request.auth != null
+          && get(/databases/$(database)/documents/payments/$(paymentId)).data.userId == request.auth.uid;
+      }
+    }
+
+    match /appErrors/{errorId} {
+      allow create: if request.auth != null
+        && request.resource.data.userId == request.auth.uid;
+    }
+
+    match /supportTickets/{ticketId} {
+      allow create: if request.auth != null
+        && request.resource.data.userId == request.auth.uid;
+      allow read: if request.auth != null
+        && resource.data.userId == request.auth.uid;
+    }
+  }
+}

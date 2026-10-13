@@ -3,8 +3,13 @@ package com.example.playo;
 import android.os.Bundle;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.view.ViewGroup;
+import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
 import com.google.android.material.appbar.MaterialToolbar;
 
 /**
@@ -16,11 +21,23 @@ public class BookingDetailsActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        EdgeToEdge.enable(this);
         setContentView(R.layout.activity_booking_detail);
 
         // --- Toolbar ---
         MaterialToolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setNavigationOnClickListener(v -> finish());
+
+        final int baseToolbarHeight = toolbar.getLayoutParams().height;
+        ViewCompat.setOnApplyWindowInsetsListener(toolbar, (v, insets) -> {
+            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+            int topInset = systemBars.top;
+            v.setPadding(v.getPaddingLeft(), topInset, v.getPaddingRight(), v.getPaddingBottom());
+            ViewGroup.LayoutParams lp = v.getLayoutParams();
+            lp.height = baseToolbarHeight + topInset;
+            v.setLayoutParams(lp);
+            return insets;
+        });
 
         // --- Read intent extras ---
         String turfName = getIntent().getStringExtra("turf_name");

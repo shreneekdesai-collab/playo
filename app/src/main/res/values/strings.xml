@@ -14,6 +14,7 @@
     <!-- Account menu options -->
     <string name="menu_personal_details">Personal Details</string>
     <string name="menu_my_turfs">My Turf Listings</string>
+    <string name="menu_add_turf">Add Turf Listing</string>
     <string name="menu_booking_history">Booking History</string>
     <string name="menu_favorites">Favorites</string>
     <string name="menu_notifications">Notifications</string>
@@ -62,9 +63,18 @@
     <string name="view_details">View Details</string>
     <string name="add_turf">Add New Turf</string>
     <string name="no_listings">No turf listings yet</string>
+    <string name="description">Description</string>
+    <string name="contact_number">Contact Number</string>
+    <string name="add_photos">Add Photos</string>
+    <string name="at_least_one_photo">Please add at least one photo</string>
+    <string name="publishing">Publishing...</string>
+    <string name="book_slot_title">Book Slot</string>
 
     <!-- Add turf -->
     <string name="add_turf_title">Add New Turf</string>
+    <string name="sport">Sport</string>
+    <string name="use_my_location">Use my location</string>
+    <string name="map_center_pin">Selected map location</string>
 
     <!-- Payment history -->
     <string name="payment_history">Payment History</string>

@@ -7,7 +7,11 @@
         <item name="colorSecondary">@color/colorSecondary</item>
         <item name="colorOnSecondary">@color/white</item>
         <item name="android:statusBarColor">@color/screen_bg</item>
+        <item name="android:navigationBarColor">@color/screen_bg</item>
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:windowLightNavigationBar">true</item>
         <item name="android:windowBackground">@color/screen_bg</item>
+        <item name="android:windowAnimationStyle">@style/PlayZo.ActivityAnimation</item>
         <item name="materialCardViewStyle">@style/Widget.Material3.CardView.Elevated</item>
     </style>
 
@@ -19,7 +23,11 @@
         <item name="colorSecondary">@color/colorSecondary</item>
         <item name="colorOnSecondary">@color/white</item>
         <item name="android:statusBarColor">@color/toolbar_bg</item>
+        <item name="android:navigationBarColor">@color/screen_bg</item>
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:windowLightNavigationBar">true</item>
         <item name="android:windowBackground">@color/screen_bg</item>
+        <item name="android:windowAnimationStyle">@style/PlayZo.ActivityAnimation</item>
     </style>
 
     <!-- Card shape used across the app -->
@@ -47,5 +55,38 @@
         <item name="navigationIconTint">@color/toolbar_fg</item>
         <item name="android:elevation">0dp</item>
         <item name="contentInsetStartWithNavigation">0dp</item>
+    </style>
+
+    <style name="PlayZo.ActivityAnimation" parent="@android:style/Animation.Activity">
+        <item name="android:activityOpenEnterAnimation">@anim/slide_in_right</item>
+        <item name="android:activityOpenExitAnimation">@anim/slide_out_left</item>
+        <item name="android:activityCloseEnterAnimation">@anim/slide_in_left</item>
+        <item name="android:activityCloseExitAnimation">@anim/slide_out_right</item>
+    </style>
+
+    <style name="Widget.PlayZo.BottomNav" parent="Widget.Material3.BottomNavigationView">
+        <item name="android:background">@drawable/bg_bottom_nav</item>
+        <item name="itemIconTint">@color/nav_item_color</item>
+        <item name="itemTextColor">@color/nav_item_color</item>
+        <item name="itemActiveIndicatorStyle">@style/Widget.PlayZo.BottomNav.ActiveIndicator</item>
+        <item name="itemTextAppearanceActive">@style/Widget.PlayZo.BottomNav.Label.Active</item>
+        <item name="itemTextAppearanceInactive">@style/Widget.PlayZo.BottomNav.Label.Inactive</item>
+        <item name="labelVisibilityMode">labeled</item>
+        <item name="android:elevation">8dp</item>
+    </style>
+
+    <style name="Widget.PlayZo.BottomNav.ActiveIndicator"
+        parent="Widget.Material3.BottomNavigationView.ActiveIndicator">
+        <item name="android:color">@color/nav_indicator</item>
+    </style>
+
+    <style name="Widget.PlayZo.BottomNav.Label.Active" parent="TextAppearance.Material3.LabelMedium">
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/nav_item_active</item>
+    </style>
+
+    <style name="Widget.PlayZo.BottomNav.Label.Inactive" parent="TextAppearance.Material3.LabelMedium">
+        <item name="android:textStyle">normal</item>
+        <item name="android:textColor">@color/nav_item_inactive</item>
     </style>
 </resources>

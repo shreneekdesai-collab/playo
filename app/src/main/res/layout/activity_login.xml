@@ -87,12 +87,53 @@
                 android:layout_width="match_parent"
                 android:layout_height="56dp"
                 android:layout_marginTop="20dp"
-                android:backgroundTint="#000000"
+                android:backgroundTint="@color/button_bg"
                 android:text="Login"
                 android:textSize="16sp"
                 android:textStyle="bold"
                 app:cornerRadius="16dp"
-                app:rippleColor="#33FFFFFF" />
+                app:rippleColor="@color/overlay_white" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_weight="1"
+                    android:background="@color/divider" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="12dp"
+                    android:text="OR"
+                    android:textColor="@color/text_secondary"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_weight="1"
+                    android:background="@color/divider" />
+            </LinearLayout>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/googleSignInButton"
+                style="@style/Widget.Material3.Button.OutlinedButton"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:layout_marginTop="12dp"
+                android:text="Continue with Google"
+                android:textAllCaps="false"
+                android:textColor="@color/text_primary"
+                app:cornerRadius="16dp"
+                app:strokeColor="@color/divider" />
 
             <ProgressBar
                 android:id="@+id/loginProgress"

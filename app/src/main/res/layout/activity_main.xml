@@ -6,7 +6,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FFFFFF"
+    android:background="@color/screen_bg"
     tools:context=".MainActivity">
 
     <FrameLayout
@@ -14,14 +14,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-    <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:id="@+id/bottomView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        android:background="#FFFFFF"
-        app:labelVisibilityMode="labeled"
-        app:menu="@menu/bottom_menu"
-        app:layout_behavior="@string/hide_bottom_view_on_scroll_behavior" />
+    <include layout="@layout/layout_bottom_nav" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

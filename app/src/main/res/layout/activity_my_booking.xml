@@ -16,24 +16,36 @@
         app:title="@string/my_bookings"
         app:titleTextColor="@color/toolbar_fg" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/bookingsRecycler"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:clipToPadding="false"
-        android:paddingTop="8dp"
-        android:paddingBottom="16dp"
-        android:paddingHorizontal="12dp"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        tools:listitem="@layout/item_booking" />
+        android:layout_height="0dp"
+        android:layout_weight="1">
 
-    <TextView
-        android:id="@+id/emptyView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:text="@string/no_bookings"
-        android:textColor="@color/text_secondary"
-        android:textSize="16sp"
-        android:visibility="gone" />
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/bookingsRecycler"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clipToPadding="false"
+            android:paddingTop="8dp"
+            android:paddingBottom="16dp"
+            android:paddingHorizontal="12dp"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            tools:listitem="@layout/item_booking" />
+
+        <ProgressBar
+            android:id="@+id/loadingView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center" />
+
+        <TextView
+            android:id="@+id/emptyView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="@string/no_bookings"
+            android:textColor="@color/text_secondary"
+            android:textSize="16sp"
+            android:visibility="gone" />
+    </FrameLayout>
 </LinearLayout>

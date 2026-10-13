@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<animated-vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:drawable="@drawable/ic_booking_check">
+    <target
+        android:animation="@animator/check_circle_scale_x"
+        android:name="circle" />
+    <target
+        android:animation="@animator/check_circle_scale_y"
+        android:name="circle" />
+    <target
+        android:animation="@animator/check_trim_path"
+        android:name="check" />
+</animated-vector>

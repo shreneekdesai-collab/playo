@@ -14,14 +14,16 @@ import java.util.ArrayList;
 public class CategoryFragment extends Fragment {
 
     private boolean isBottomNavVisible = true;
+    private RecyclerView recyclerView;
+    private BottomNavigationView bottomNav;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_category, container, false);
 
-        RecyclerView recyclerView = view.findViewById(R.id.categoryRecyclerView);
-        BottomNavigationView bottomNav = requireActivity().findViewById(R.id.bottomView);
+        recyclerView = view.findViewById(R.id.categoryRecyclerView);
+        bottomNav = requireActivity().findViewById(R.id.bottomView);
 
         recyclerView.setLayoutManager(new GridLayoutManager(requireContext(), 2));
 
@@ -31,16 +33,10 @@ public class CategoryFragment extends Fragment {
                 super.onScrolled(recyclerView, dx, dy);
                 if (dy > 10 && isBottomNavVisible) {
                     isBottomNavVisible = false;
-                    bottomNav.animate()
-                            .translationY(bottomNav.getHeight() + 30f)
-                            .setDuration(250)
-                            .start();
+                    BottomNavHelper.hide(bottomNav);
                 } else if (dy < -10 && !isBottomNavVisible) {
                     isBottomNavVisible = true;
-                    bottomNav.animate()
-                            .translationY(0)
-                            .setDuration(250)
-                            .start();
+                    BottomNavHelper.show(bottomNav);
                 }
             }
         });
@@ -58,7 +54,17 @@ public class CategoryFragment extends Fragment {
         categoryList.add(new GameCategory("Kabaddi", R.mipmap.ic_launcher));
 
         recyclerView.setAdapter(new CategoryAdapter(categoryList));
+        AnimUtils.staggeredEntrance(recyclerView);
 
         return view;
+    }
+
+    @Override
+    public void onDestroyView() {
+        AnimUtils.cancelTree(recyclerView);
+        BottomNavHelper.cancel(bottomNav);
+        recyclerView = null;
+        bottomNav = null;
+        super.onDestroyView();
     }
 }

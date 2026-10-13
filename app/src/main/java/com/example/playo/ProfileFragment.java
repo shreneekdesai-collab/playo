@@ -28,7 +28,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.ArrayList;
 
 /**
@@ -45,9 +48,22 @@ public class ProfileFragment extends Fragment {
     private ImageView profileAvatar;
     private TextView profileName;
     private TextView profileEmail;
+    private TextView profileRoleBadge;
     private TextView statBookingCount;
     private TextView statTotalSpent;
     private boolean isBottomNavVisible = true;
+    private ArrayList<ProfileOption> menuOptions;
+    private ProfileAdapter menuAdapter;
+
+    @Override
+    public void onDestroyView() {
+        AnimUtils.cancelTree(profileParent);
+        if (isAdded()) {
+            BottomNavHelper.cancel(requireActivity().findViewById(R.id.bottomView));
+        }
+        profileParent = null;
+        super.onDestroyView();
+    }
 
     // Launcher for picking a new profile photo from the gallery.
     private final ActivityResultLauncher<Intent> imagePickerLauncher =
@@ -74,12 +90,14 @@ public class ProfileFragment extends Fragment {
         profileAvatar = view.findViewById(R.id.profileAvatar);
         profileName = view.findViewById(R.id.profileName);
         profileEmail = view.findViewById(R.id.profileEmail);
+        profileRoleBadge = view.findViewById(R.id.profileRoleBadge);
         statBookingCount = view.findViewById(R.id.statBookingCount);
         statTotalSpent = view.findViewById(R.id.statTotalSpent);
         MaterialCardView cardBookings = view.findViewById(R.id.cardBookings);
         MaterialCardView cardPayments = view.findViewById(R.id.cardPayments);
         FrameLayout avatarWrapper = view.findViewById(R.id.avatarWrapper);
         RecyclerView menuRecycler = view.findViewById(R.id.profileMenuRecycler);
+        animateProfile(view, avatarWrapper, cardBookings, cardPayments, menuRecycler);
 
         // --- Edge-to-edge: pad content below the status bar ---
         applySystemBarInsets(view);
@@ -95,15 +113,30 @@ public class ProfileFragment extends Fragment {
         cardPayments.setOnClickListener(v -> openActivity(PaymentHistoryActivity.class));
 
         // --- Build account menu ---
-        ArrayList<ProfileOption> options = buildMenuOptions();
-        ProfileAdapter adapter = new ProfileAdapter(options, this::onOptionClicked);
+        menuOptions = buildMenuOptions();
+        menuAdapter = new ProfileAdapter(menuOptions, this::onOptionClicked);
         menuRecycler.setLayoutManager(new LinearLayoutManager(getContext()));
-        menuRecycler.setAdapter(adapter);
+        menuRecycler.setAdapter(menuAdapter);
+        loadRoleAndRebuildMenu();
 
         // --- Hide/show the bottom bar while scrolling ---
         setupBottomBarScroll(view);
 
         return view;
+    }
+
+    private void loadRoleAndRebuildMenu() {
+        UserRole.fetchRole(role -> {
+            if (!isAdded() || getView() == null) {
+                return;
+            }
+            profileRoleBadge.setText("owner".equals(role) ? "Turf Owner" : "Player");
+            AnimUtils.fadeIn(profileRoleBadge);
+            menuOptions.clear();
+            menuOptions.addAll(buildMenuOptions());
+            menuAdapter.notifyDataSetChanged();
+            AnimUtils.staggeredEntrance((RecyclerView) getView().findViewById(R.id.profileMenuRecycler));
+        });
     }
 
     /** Opens the system gallery to choose a new profile photo. */
@@ -152,32 +185,42 @@ public class ProfileFragment extends Fragment {
                 (NestedScrollView.OnScrollChangeListener) (v, scrollX, scrollY, oldScrollX, oldScrollY) -> {
                     if (scrollY > oldScrollY && isBottomNavVisible) {
                         isBottomNavVisible = false;
-                        bottomNav.animate()
-                                .translationY(bottomNav.getHeight() + 30f)
-                                .setDuration(250)
-                                .start();
+                        BottomNavHelper.hide(bottomNav);
                     } else if (scrollY < oldScrollY && !isBottomNavVisible) {
                         isBottomNavVisible = true;
-                        bottomNav.animate()
-                                .translationY(0)
-                                .setDuration(250)
-                                .start();
+                        BottomNavHelper.show(bottomNav);
                     }
                 });
     }
 
-    /** Populates name/email and stats from SharedPreferences. */
+    /** Populates name/email and booking stats from Firestore, plus the local avatar. */
     private void loadUserData() {
-        SharedPreferences prefs = getContext().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
-        String name = prefs.getString("user_name", "Player One");
-        String email = prefs.getString("user_email", "player@example.com");
-        int bookings = prefs.getInt("booking_count", 0);
-        int totalSpent = prefs.getInt("total_spent", 0);
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        if (currentUser == null) {
+            return; // shouldn't happen if auth flow gates entry, but guard anyway
+        }
+        String uid = currentUser.getUid();
 
-        profileName.setText(name);
-        profileEmail.setText(email);
-        statBookingCount.setText(String.valueOf(bookings));
-        statTotalSpent.setText("₹" + totalSpent);
+        FirebaseFirestore.getInstance()
+                .collection("users")
+                .document(uid)
+                .get()
+                .addOnSuccessListener(doc -> {
+                    if (doc.exists()) {
+                        String name = doc.getString("name");
+                        String email = doc.getString("email");
+                        profileName.setText(name != null ? name : "");
+                        profileEmail.setText(email != null ? email : currentUser.getEmail());
+                    } else {
+                        // Fallback to Auth data if Firestore doc is somehow missing
+                        profileEmail.setText(currentUser.getEmail());
+                    }
+                })
+                .addOnFailureListener(e ->
+                        android.util.Log.e("ProfileFragment", "Failed to load profile", e));
+
+        SharedPreferences prefs = getContext().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+        loadBookingStats(uid);
 
         // Restore the previously chosen profile photo, if any.
         String imageUri = prefs.getString(PROFILE_IMAGE_KEY, null);
@@ -186,11 +229,49 @@ public class ProfileFragment extends Fragment {
         }
     }
 
+    private void loadBookingStats(String uid) {
+        FirebaseFirestore.getInstance().collection("bookings")
+                .whereEqualTo("userId", uid)
+                .get()
+                .addOnSuccessListener(snapshot -> {
+                    if (!isAdded() || getView() == null) {
+                        return;
+                    }
+                    double totalSpent = 0.0;
+                    for (com.google.firebase.firestore.DocumentSnapshot document : snapshot.getDocuments()) {
+                        Number amount = (Number) document.get("amount");
+                        if (amount != null) {
+                            totalSpent += amount.doubleValue();
+                        }
+                    }
+                    AnimUtils.countUp(statBookingCount, 0, snapshot.size(), "");
+                    AnimUtils.countUp(statTotalSpent, 0, (int) totalSpent, "₹");
+                })
+                .addOnFailureListener(error ->
+                        android.util.Log.e("ProfileFragment", "Failed to load booking stats", error));
+    }
+
+    private void animateProfile(View root, View avatar, View bookings, View payments,
+                                RecyclerView menuRecycler) {
+        View[] views = {avatar, profileName, profileEmail, profileRoleBadge, bookings, payments};
+        for (int index = 0; index < views.length; index++) {
+            AnimUtils.slideUpFadeIn(views[index], index * Motion.STAGGER_STEP);
+        }
+        PressEffect.attach(avatar);
+        AnimUtils.staggeredEntrance(menuRecycler);
+    }
+
     /** Builds the list of account menu options with their target activities. */
     private ArrayList<ProfileOption> buildMenuOptions() {
         ArrayList<ProfileOption> list = new ArrayList<>();
+        if (!"owner".equals(UserRole.getCachedRole())) {
+            list.add(new ProfileOption("Become a Turf Owner", R.drawable.ic_store, null));
+        }
         list.add(new ProfileOption(getString(R.string.menu_personal_details), R.drawable.ic_person, PersonalDetailsActivity.class));
-        list.add(new ProfileOption(getString(R.string.menu_my_turfs), R.drawable.ic_store, MyListingsActivity.class));
+        if ("owner".equals(UserRole.getCachedRole())) {
+            list.add(new ProfileOption(getString(R.string.menu_my_turfs), R.drawable.ic_store, MyListingsActivity.class));
+            list.add(new ProfileOption(getString(R.string.menu_add_turf), R.drawable.ic_add, AddTurfActivity.class));
+        }
         list.add(new ProfileOption(getString(R.string.menu_booking_history), R.drawable.ic_history, MyBookingsActivity.class));
         list.add(new ProfileOption(getString(R.string.menu_favorites), R.drawable.ic_favorite, FavoritesActivity.class));
         list.add(new ProfileOption(getString(R.string.menu_notifications), R.drawable.ic_notifications, NotificationSettingsActivity.class));
@@ -203,10 +284,71 @@ public class ProfileFragment extends Fragment {
 
     /** Handles menu option clicks; special-cases logout. */
     private void onOptionClicked(ProfileOption option) {
-        if (option.getTargetActivity() == null) {
+        if ("Become a Turf Owner".equals(option.getTitle())) {
+            showUpgradeDialog();
+        } else if (option.getTargetActivity() == null) {
             showLogoutDialog();
         } else {
             openActivity(option.getTargetActivity());
+        }
+    }
+
+    private void showUpgradeDialog() {
+        androidx.appcompat.app.AlertDialog dialog = new MaterialAlertDialogBuilder(requireContext())
+                .setTitle("Become a Turf Owner?")
+                .setMessage("You will be able to list your turfs and receive bookings. "
+                        + "You can still book turfs as a player.")
+                .setPositiveButton("Upgrade", null)
+                .setNegativeButton("Cancel", null)
+                .create();
+        dialog.setOnShowListener(ignored -> dialog.getButton(android.content.DialogInterface.BUTTON_POSITIVE)
+                .setOnClickListener(v -> upgradeToOwner(dialog)));
+        dialog.show();
+    }
+
+    private void upgradeToOwner(androidx.appcompat.app.AlertDialog dialog) {
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user == null) {
+            dialog.dismiss();
+            showUpgradeError("Upgrade could not be completed. Please try again.", null);
+            return;
+        }
+        android.widget.Button upgradeButton = dialog.getButton(android.content.DialogInterface.BUTTON_POSITIVE);
+        upgradeButton.setEnabled(false);
+        upgradeButton.setText("Upgrading...");
+        FirebaseFirestore.getInstance().collection("users").document(user.getUid())
+                .update("role", "owner")
+                .addOnSuccessListener(unused -> {
+                    if (!isAdded()) {
+                        return;
+                    }
+                    UserRole.clearCache();
+                    dialog.dismiss();
+                    UserRole.fetchRole(role -> {
+                        if (!isAdded() || getView() == null) {
+                            return;
+                        }
+                        profileRoleBadge.setText("Turf Owner");
+                        menuOptions.clear();
+                        menuOptions.addAll(buildMenuOptions());
+                        menuAdapter.notifyDataSetChanged();
+                        Snackbar.make(profileParent, "You are now a turf owner", Snackbar.LENGTH_LONG).show();
+                    });
+                })
+                .addOnFailureListener(exception -> {
+                    android.util.Log.e("ProfileFragment", "Failed to upgrade user role", exception);
+                    if (!isAdded()) {
+                        return;
+                    }
+                    upgradeButton.setEnabled(true);
+                    upgradeButton.setText("Upgrade");
+                    showUpgradeError("Upgrade could not be completed. Please try again.", dialog);
+                });
+    }
+
+    private void showUpgradeError(String message, androidx.appcompat.app.AlertDialog dialog) {
+        if (isAdded()) {
+            Snackbar.make(profileParent, message, Snackbar.LENGTH_LONG).show();
         }
     }
 
@@ -224,6 +366,7 @@ public class ProfileFragment extends Fragment {
                 .setPositiveButton(getString(R.string.logout_confirm), (dialog, which) -> {
                     // Sign out from Firebase and clear locally stored session data.
                     FirebaseAuth.getInstance().signOut();
+                    UserRole.clearCache();
                     getContext().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
                             .edit().clear().apply();
                     Toast.makeText(getContext(), getString(R.string.logged_out), Toast.LENGTH_SHORT).show();

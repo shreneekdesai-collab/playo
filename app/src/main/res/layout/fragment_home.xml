@@ -5,45 +5,63 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FFFFFF">
+    android:background="@color/screen_bg">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appBarLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#FFFFFF"
-        android:elevation="0dp">
+        android:background="@color/screen_bg"
+        android:elevation="0dp"
+        android:clipChildren="false"
+        android:clipToPadding="false"
+        android:stateListAnimator="@null">
 
         <com.google.android.material.appbar.CollapsingToolbarLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_scrollFlags="scroll|exitUntilCollapsed">
+             android:layout_width="match_parent"
+             android:layout_height="wrap_content"
+             android:background="@color/screen_bg"
+             android:clipChildren="false"
+             android:clipToPadding="false"
+             app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
             <!-- Welcome header (parallax, collapses away) -->
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:paddingTop="40dp"
-                android:paddingBottom="60dp"
-                app:layout_collapseMode="parallax">
+                 android:layout_height="wrap_content"
+                 android:orientation="vertical"
+                 android:clipChildren="false"
+                 android:clipToPadding="false"
+                 android:paddingTop="40dp"
+                 android:paddingBottom="16dp"
+                 app:layout_collapseMode="parallax">
 
                 <TextView
                     android:id="@+id/textView"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/welcome"
-                    android:textAlignment="center"
-                    android:textSize="60sp"
-                    android:textStyle="bold" />
+                     android:layout_height="wrap_content"
+                     android:text="@string/welcome"
+                     android:textColor="@color/text_primary"
+                     android:textAlignment="center"
+                     android:textSize="60sp"
+                     android:textStyle="bold"
+                     android:includeFontPadding="true"
+                     android:lineSpacingMultiplier="1.0"
+                     android:lineSpacingExtra="0dp"
+                     android:paddingTop="2dp"
+                     android:paddingBottom="6dp"
+                     app:autoSizeTextType="uniform"
+                     app:autoSizeMaxTextSize="60sp"
+                     app:autoSizeMinTextSize="28sp" />
 
                 <TextView
+                    android:id="@+id/homeWelcomeSubtitle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Find your perfect play ground below"
                     android:textAlignment="center"
                     android:textSize="18sp"
-                    android:textColor="#666666" />
+                     android:textColor="@color/text_secondary" />
 
             </LinearLayout>
 
@@ -51,8 +69,9 @@
             <androidx.appcompat.widget.Toolbar
                 android:id="@+id/homeToolbar"
                 android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                app:layout_collapseMode="pin">
+                 android:layout_height="?attr/actionBarSize"
+                 android:background="@color/screen_bg"
+                 app:layout_collapseMode="pin">
 
                 <LinearLayout
                     android:id="@+id/toolbarSearchContainer"
@@ -60,16 +79,15 @@
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:gravity="center_vertical"
-                    android:paddingHorizontal="16dp"
-                    android:visibility="gone"
-                    android:alpha="0">
+                     android:paddingHorizontal="16dp"
+                     android:visibility="gone">
 
                     <ImageView
                         android:layout_width="20dp"
                         android:layout_height="20dp"
                         android:layout_marginEnd="12dp"
                         android:src="@android:drawable/ic_menu_search"
-                        android:tint="#999999"
+                         android:tint="@color/text_hint"
                         android:contentDescription="@string/search" />
 
                     <androidx.appcompat.widget.AppCompatEditText
@@ -84,8 +102,8 @@
                         android:imeOptions="actionSearch"
                         android:inputType="text"
                         android:paddingHorizontal="16dp"
-                        android:textColor="#333333"
-                        android:textColorHint="#999999"
+                         android:textColor="@color/text_primary"
+                         android:textColorHint="@color/text_hint"
                         android:textSize="16sp" />
 
                 </LinearLayout>
@@ -99,7 +117,69 @@
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:clipToPadding="false"
+        android:paddingBottom="80dp"
         android:nestedScrollingEnabled="true"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
+    <LinearLayout
+        android:id="@+id/homeStateContainer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <com.facebook.shimmer.ShimmerFrameLayout
+            android:id="@+id/homeProgress"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:shimmer_auto_start="false"
+            app:shimmer_base_color="@color/skeleton_base"
+            app:shimmer_highlight_color="@color/skeleton_highlight">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <include layout="@layout/item_turf_skeleton" />
+                <include layout="@layout/item_turf_skeleton" />
+                <include layout="@layout/item_turf_skeleton" />
+                <include layout="@layout/item_turf_skeleton" />
+                <include layout="@layout/item_turf_skeleton" />
+            </LinearLayout>
+        </com.facebook.shimmer.ShimmerFrameLayout>
+
+        <TextView
+            android:id="@+id/homeEmptyView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:text="No turfs available yet"
+            android:textColor="@color/text_secondary"
+            android:textSize="16sp"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/homeErrorView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:text="Unable to load turfs"
+            android:textColor="@color/text_secondary"
+            android:textSize="16sp"
+            android:visibility="gone" />
+
+        <Button
+            android:id="@+id/homeRetryButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+             android:backgroundTint="@color/button_bg"
+            android:text="Retry"
+             android:textColor="@color/button_text"
+            android:visibility="gone" />
+    </LinearLayout>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

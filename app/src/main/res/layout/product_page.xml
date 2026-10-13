@@ -6,7 +6,7 @@
     android:id="@+id/coordinatorRoot"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F5F5F5">
+     android:background="@color/screen_bg">
 
     <!-- 🔹 Attractive AppBar with Collapsing Image -->
     <com.google.android.material.appbar.AppBarLayout
@@ -37,12 +37,20 @@
             <com.google.android.material.tabs.TabLayout
                 android:id="@+id/imageIndicator"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="bottom|center_horizontal"
-                android:layout_marginBottom="24dp"
-                app:tabBackground="@drawable/indicator_dot_selector"
-                app:tabGravity="center"
-                app:tabIndicatorHeight="0dp" />
+                 android:layout_height="wrap_content"
+                 android:layout_gravity="bottom|center_horizontal"
+                 android:layout_marginBottom="24dp"
+                 android:background="@android:color/transparent"
+                 android:clickable="false"
+                 android:focusable="false"
+                 android:visibility="gone"
+                 app:tabBackground="@drawable/indicator_dot_selector"
+                 app:tabGravity="center"
+                 app:tabIndicatorHeight="0dp"
+                 app:tabPaddingStart="4dp"
+                 app:tabPaddingEnd="4dp"
+                 app:tabPaddingTop="4dp"
+                 app:tabPaddingBottom="4dp" />
 
             <!-- Status bar scrim: darkens top strip behind status bar & back button -->
             <View
@@ -65,8 +73,11 @@
 
     <!-- 🔹 Scrollable Content Area -->
     <androidx.core.widget.NestedScrollView
+        android:id="@+id/productScrollView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:clipToPadding="false"
+        android:paddingBottom="80dp"
         android:layout_marginTop="-30dp"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
@@ -78,11 +89,13 @@
 
             <!-- 🔹 1. First Card: Product Details -->
             <androidx.cardview.widget.CardView
+                android:id="@+id/reviewSection"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
 
-                android:translationZ="10dp"
-                app:cardCornerRadius="20dp"
+                 android:translationZ="10dp"
+                 app:cardBackgroundColor="@color/surface_white"
+                 app:cardCornerRadius="20dp"
                 app:cardElevation="8dp">
 
                 <LinearLayout
@@ -104,7 +117,7 @@
                             android:layout_height="wrap_content"
                             android:layout_alignParentStart="true"
                             android:text="Premium Football Turf"
-                            android:textColor="#212121"
+                             android:textColor="@color/text_primary"
                             android:textSize="24sp"
                             android:textStyle="bold" />
 
@@ -117,14 +130,14 @@
                             android:layout_marginTop="4dp"
                             android:numStars="5"
                             android:rating="4.5"
-                            android:progressTint="#FFC107"/>
+                             android:progressTint="@color/colorAccent"/>
                     </RelativeLayout>
 
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
                         android:layout_marginVertical="16dp"
-                        android:background="#EEEEEE" />
+                         android:background="@color/divider" />
 
                     <!-- Address Section -->
                     <TextView
@@ -133,19 +146,49 @@
                         android:layout_height="wrap_content"
                         android:text="Location"
                         tools:text="Location"
-                        android:textColor="#757575"
+                         android:textColor="@color/text_secondary"
                         android:textSize="14sp"
                         android:textAllCaps="true"
                         android:letterSpacing="0.1"/>
 
-                    <TextView
-                        android:id="@+id/address"
+                    <LinearLayout
+                        android:id="@+id/locationRow"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="4dp"
-                        android:text="123 Sports Arena, Downtown City"
-                        android:textColor="#424242"
-                        android:textSize="16sp" />
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/address"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="123 Sports Arena, Downtown City"
+                            android:textColor="@color/text_primary"
+                            android:textSize="16sp" />
+
+                        <FrameLayout
+                            android:id="@+id/mapButtonTouchTarget"
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            android:contentDescription="Open location in Maps"
+                            android:clickable="true"
+                            android:focusable="true">
+
+                            <ImageButton
+                                android:id="@+id/btnOpenMap"
+                                android:layout_width="30dp"
+                                android:layout_height="30dp"
+                                android:layout_gravity="center"
+                                android:background="@drawable/bg_map_button"
+                                android:contentDescription="Open location in Maps"
+                                android:padding="6dp"
+                                android:src="@drawable/ic_map_pin"
+                                android:tint="@color/colorPrimary"
+                                android:foreground="?attr/selectableItemBackgroundBorderless" />
+                        </FrameLayout>
+                    </LinearLayout>
 
                     <!-- Price Section -->
                     <TextView
@@ -153,7 +196,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="20dp"
                         android:text="Pricing"
-                        android:textColor="#757575"
+                         android:textColor="@color/text_secondary"
                         android:textSize="14sp"
                         android:textAllCaps="true"
                         android:letterSpacing="0.1"/>
@@ -164,9 +207,29 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="4dp"
                         android:text="₹ 1,200 / Hour"
-                        android:textColor="#2E7D32"
+                         android:textColor="@color/colorSecondary"
                         android:textSize="20sp"
                         android:textStyle="bold" />
+
+                    <!-- Description Section -->
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="20dp"
+                        android:text="About this turf"
+                         android:textColor="@color/text_secondary"
+                        android:textSize="14sp"
+                        android:textAllCaps="true"
+                        android:letterSpacing="0.1"/>
+
+                    <TextView
+                        android:id="@+id/description"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:text=""
+                         android:textColor="@color/text_primary"
+                        android:textSize="16sp" />
 
                     <!-- 🔹 Centered Book Now Button -->
                     <Button
@@ -178,17 +241,19 @@
                         android:textSize="18sp"
                         android:textStyle="bold"
                         app:cornerRadius="16dp"
-                        android:backgroundTint="#000000"
-                        app:rippleColor="#33FFFFFF" />
+                         android:backgroundTint="@color/button_bg"
+                         android:textColor="@color/button_text"
+                         app:rippleColor="@color/overlay_white" />
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
             <!-- 🔹 2. New Second Card: Add Review Section -->
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="-40dp"
-                app:cardElevation="8dp">
+                 android:layout_height="wrap_content"
+                 android:layout_marginTop="-40dp"
+                 app:cardBackgroundColor="@color/surface_white"
+                 app:cardElevation="8dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -200,7 +265,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Add your Review"
-                        android:textColor="#757575"
+                         android:textColor="@color/text_secondary"
                         android:textSize="14sp"
                         android:textAllCaps="true"
                         android:letterSpacing="0.1"/>
@@ -225,18 +290,71 @@
                             android:layout_height="wrap_content"
                             android:hint="Tell others about your experience..."
                             android:gravity="top"
-                            android:lines="3" />
+                            android:lines="3"
+                            android:maxLength="500" />
                     </com.google.android.material.textfield.TextInputLayout>
 
                     <Button
                         android:id="@+id/btnSubmitReview"
-                        style="@style/Widget.MaterialComponents.Button.TextButton"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
                         android:layout_gravity="end"
                         android:text="Post Review"
-                        android:textColor="#2E7D32" />
+                        android:textColor="@color/button_text"
+                        android:backgroundTint="@color/button_bg"
+                        app:cornerRadius="16dp" />
+
+                    <ProgressBar
+                        android:id="@+id/reviewProgress"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="end"
+                        android:visibility="gone" />
+
+                    <TextView
+                        android:id="@+id/reviewHeader"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="24dp"
+                        android:text="Reviews"
+                         android:textColor="@color/text_primary"
+                        android:textSize="20sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/reviewSummary"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                         android:textColor="@color/text_secondary"
+                        android:textSize="14sp" />
+
+                    <ProgressBar
+                        android:id="@+id/reviewsLoading"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="16dp"
+                        android:visibility="gone" />
+
+                    <TextView
+                        android:id="@+id/reviewsEmpty"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:gravity="center"
+                        android:text="No reviews yet. Be the first to review!"
+                         android:textColor="@color/text_secondary"
+                        android:textSize="14sp"
+                        android:visibility="gone" />
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/reviewsRecycler"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:nestedScrollingEnabled="false" />
 
 
                 </LinearLayout>
@@ -248,14 +366,6 @@
     </androidx.core.widget.NestedScrollView>
 
     <!-- Bottom navigation so Profile is reachable from the turf details page -->
-    <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:id="@+id/productBottomView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        android:background="@color/surface_white"
-        app:labelVisibilityMode="labeled"
-        app:menu="@menu/bottom_menu"
-        app:tint="@color/surface_white" />
+    <include layout="@layout/layout_bottom_nav" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -1,0 +1,19 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="72dp"
+    android:height="72dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <group
+        android:name="circle"
+        android:pivotX="12"
+        android:pivotY="12">
+        <path
+            android:fillColor="@color/colorPrimary"
+            android:pathData="M12,2A10,10 0,1 0,12 22A10,10 0,1 0,12 2" />
+    </group>
+    <path
+        android:name="check"
+        android:fillColor="@color/button_text"
+        android:pathData="M10.2,16.8L5.7,12.3L7.1,10.9L10.2,14L16.9,7.3L18.3,8.7Z"
+        android:trimPathEnd="0" />
+</vector>

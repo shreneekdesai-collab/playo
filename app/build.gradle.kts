@@ -5,6 +5,9 @@ plugins {
 
 android {
     namespace = "com.example.playo"
+    buildFeatures {
+        buildConfig = true
+    }
 
     compileSdk = 36
 
@@ -39,11 +42,21 @@ dependencies {
     implementation("com.google.firebase:firebase-analytics")
     implementation("com.google.firebase:firebase-auth")
     implementation("com.google.firebase:firebase-firestore")
+    implementation("com.google.firebase:firebase-storage")
+    implementation("com.github.bumptech.glide:glide:4.16.0")
+    implementation("androidx.viewpager2:viewpager2:1.1.0")
+    implementation("androidx.cardview:cardview:1.0.0")
     implementation(libs.appcompat)
     implementation(libs.material)
     implementation(libs.activity)
     implementation(libs.constraintlayout)
     implementation(libs.recyclerview)
+    implementation(libs.credentials)
+    implementation(libs.credentials.play.services.auth)
+    implementation(libs.googleid)
+    implementation(libs.osmdroid)
+    implementation(libs.play.services.location)
+    implementation(libs.shimmer)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)

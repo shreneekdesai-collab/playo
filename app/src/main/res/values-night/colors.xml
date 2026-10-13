@@ -1,7 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Theme-aware toolbar colors (dark) -->
-    <color name="toolbar_bg">#FF121212</color>
-    <color name="toolbar_fg">#FFFFFFFF</color>
-    <color name="toolbar_icon_bg">#FF26262B</color>
+    <color name="screen_bg">#FF0F1115</color>
+    <color name="surface_white">#FF1A1D24</color>
+    <color name="text_primary">#FFF1F2F6</color>
+    <color name="text_secondary">#FF9AA0AE</color>
+    <color name="text_hint">#FF6B7280</color>
+    <color name="status_success">#FF34D399</color>
+    <color name="status_failed">#FFF87171</color>
+    <color name="status_processing">#FFFBBF24</color>
+    <color name="status_needs_review">#FFFB923C</color>
+    <color name="status_neutral">#FF9AA0AE</color>
+    <color name="divider">#FF2A2E38</color>
+    <color name="card_stroke">#FF2A2E38</color>
+    <color name="toolbar_bg">#FF14161B</color>
+    <color name="toolbar_fg">#FFF1F2F6</color>
+    <color name="toolbar_icon_bg">#FF23262E</color>
+    <color name="colorPrimaryLight">#FF2B2850</color>
+    <color name="button_bg">#FFFFFFFF</color>
+    <color name="button_text">#FF000000</color>
+    <color name="disabled_surface">#FF2A2E38</color>
+    <color name="nav_bg">#FF1A1D24</color>
+    <color name="nav_item_inactive">#FFB0B3BD</color>
+    <color name="nav_item_active">#FF8F88FF</color>
+    <color name="nav_indicator">#FF2B2850</color>
+    <color name="skeleton_base">#FF2A2E38</color>
+    <color name="skeleton_highlight">#FF3A3F4A</color>
+    <color name="slot_available_bg">#FF30343D</color>
+    <color name="slot_held_bg">#FF4B515D</color>
+    <color name="slot_booked_bg">#FF606773</color>
+    <color name="slot_booked_text">#FFD9DCE3</color>
+    <color name="slot_caption">#FFD9DCE3</color>
 </resources>

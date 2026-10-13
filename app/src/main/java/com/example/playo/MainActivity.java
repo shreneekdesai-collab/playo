@@ -28,36 +28,40 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
+        ReconcileHelper.runOnce(this);
 
         // Reserve the system bar insets for the edge-to-edge layout.
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, 0);
             return insets;
         });
 
         bottomView = findViewById(R.id.bottomView);
+        BottomNavHelper.applyInsets(bottomView);
+        bottomView.setTranslationY(0);
 
         // --- Initial tab selection (supports deep links from other screens) ---
         if (savedInstanceState == null) {
             String showFragment = getIntent().getStringExtra(EXTRA_SHOW_FRAGMENT);
             if (FRAGMENT_CATEGORY.equals(showFragment)) {
                 currentTabId = R.id.Category;
-                replaceFragment(new CategoryFragment());
+                replaceFragment(new CategoryFragment(), false);
                 bottomView.setSelectedItemId(R.id.Category);
             } else if (FRAGMENT_PROFILE.equals(showFragment)) {
                 currentTabId = R.id.Profile;
-                replaceFragment(new ProfileFragment());
+                replaceFragment(new ProfileFragment(), false);
                 bottomView.setSelectedItemId(R.id.Profile);
             } else {
                 currentTabId = R.id.Home;
-                replaceFragment(new HomeFragment());
+                replaceFragment(new HomeFragment(), false);
             }
         }
 
         // --- Bottom navigation selection ---
         bottomView.setOnItemSelectedListener(menuItem -> {
             int itemId = menuItem.getItemId();
+            BottomNavHelper.show(bottomView);
             if (itemId == R.id.Home) {
                 currentTabId = R.id.Home;
                 replaceFragment(new HomeFragment());
@@ -93,8 +97,15 @@ public class MainActivity extends AppCompatActivity {
 
     /** Swaps the fragment shown inside the fragment container. */
     private void replaceFragment(Fragment fragment) {
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, fragment)
-                .commit();
+        replaceFragment(fragment, true);
+    }
+
+    private void replaceFragment(Fragment fragment, boolean animate) {
+        androidx.fragment.app.FragmentTransaction transaction = getSupportFragmentManager()
+                .beginTransaction();
+        if (animate && Motion.enabled(this)) {
+            transaction.setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
+        }
+        transaction.replace(R.id.fragment_container, fragment).commit();
     }
 }

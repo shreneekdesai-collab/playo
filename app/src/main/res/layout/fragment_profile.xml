@@ -22,7 +22,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:paddingBottom="24dp">
+             android:paddingBottom="80dp">
 
             <!-- ======================= Profile Header ======================= -->
             <LinearLayout
@@ -57,7 +57,7 @@
                     android:id="@+id/profileName"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Player One"
+                    android:text=""
                     android:textColor="@color/text_primary"
                     android:textSize="24sp"
                     android:textStyle="bold"
@@ -67,10 +67,23 @@
                     android:id="@+id/profileEmail"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="player@example.com"
+                    android:text=""
                     android:textColor="@color/text_secondary"
                     android:textSize="14sp"
                     android:layout_marginTop="2dp" />
+
+                <TextView
+                    android:id="@+id/profileRoleBadge"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    android:background="@drawable/role_button_background"
+                    android:paddingHorizontal="10dp"
+                    android:paddingVertical="4dp"
+                    android:text="Player"
+                    android:textColor="@color/role_button_text"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
             </LinearLayout>
 
             <!-- ==================== Stats Cards ==================== -->

@@ -16,6 +16,7 @@
         app:titleTextColor="@color/toolbar_fg" />
 
     <ScrollView
+        android:id="@+id/addTurfScrollView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fillViewport="true">
@@ -26,30 +27,24 @@
             android:orientation="vertical"
             android:padding="20dp">
 
-            <!-- Turf photo -->
-            <FrameLayout
-                android:layout_width="match_parent"
+            <!-- Turf photos -->
+            <TextView
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="center"
-                android:layout_marginBottom="20dp">
+                android:layout_marginBottom="8dp"
+                android:text="@string/add_photos"
+                android:textColor="@color/text_primary"
+                android:textSize="16sp"
+                android:textStyle="bold" />
 
-                <com.google.android.material.imageview.ShapeableImageView
-                    android:id="@+id/turfPhoto"
-                    android:layout_width="match_parent"
-                    android:layout_height="170dp"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/user" />
-
-                <com.google.android.material.floatingactionbutton.FloatingActionButton
-                    android:id="@+id/btnPickPhoto"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:layout_gravity="bottom|end"
-                    android:layout_margin="12dp"
-                    app:backgroundTint="@color/colorPrimary"
-                    app:fabSize="mini"
-                    app:srcCompat="@drawable/ic_edit_photo" />
-            </FrameLayout>
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/photoPreviewRecycler"
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:layout_marginBottom="20dp"
+                android:clipToPadding="false"
+                android:orientation="horizontal"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
             <!-- Turf name -->
             <com.google.android.material.textfield.TextInputLayout
@@ -92,7 +87,79 @@
                     android:id="@+id/inputLocation"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="text" />
+                 android:inputType="text" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <!-- Map location -->
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/inputMapLocationLayout"
+                style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="14dp"
+                android:hint="Turf location on map"
+                app:endIconDrawable="@drawable/ic_map_pin"
+                app:endIconMode="custom">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/inputMapLocation"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:focusable="false"
+                    android:clickable="true"
+                    android:hint="Tap to pick location"
+                    android:inputType="none"
+                    android:textColor="@color/text_primary" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <!-- Sport -->
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/inputLayoutSport"
+                style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/sport"
+                android:layout_marginBottom="14dp">
+
+                <AutoCompleteTextView
+                    android:id="@+id/inputSport"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="none"
+                    android:textColor="@color/text_primary" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <!-- Description -->
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/description"
+                android:layout_marginBottom="14dp">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/inputDescription"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textMultiLine"
+                    android:minLines="3"
+                    android:maxLines="5"
+                    android:gravity="top" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <!-- Contact number -->
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/contact_number"
+                android:layout_marginBottom="14dp">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/inputContactNumber"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="phone" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <!-- Availability switch -->
@@ -111,9 +178,17 @@
                 android:id="@+id/btnPublish"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:backgroundTint="@color/colorPrimary"
+                android:backgroundTint="@color/button_bg"
                 android:text="@string/add_turf"
-                android:textColor="@color/white" />
+                android:textColor="@color/button_text" />
+
+            <ProgressBar
+                android:id="@+id/publishProgress"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="16dp"
+                android:visibility="gone" />
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

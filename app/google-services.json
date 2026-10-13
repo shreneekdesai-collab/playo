@@ -12,7 +12,20 @@
           "package_name": "com.example.playo"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "814796695620-dhfhdjh73oc3b5t2pg4nck4vhibpvtq3.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.playo",
+            "certificate_hash": "11809a9e8201b95908ac7efdfe18d0c39532d494"
+          }
+        },
+        {
+          "client_id": "814796695620-ktq0ojodcckdibb4dctg6sa2ed3scnjn.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyCiEFRfD6NbQVahtIPsEdDmOH_L2TOOmrA"
@@ -20,7 +33,12 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "814796695620-ktq0ojodcckdibb4dctg6sa2ed3scnjn.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }

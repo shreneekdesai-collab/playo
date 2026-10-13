@@ -22,13 +22,19 @@ import com.google.android.material.imageview.ShapeableImageView;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 
 /**
- * Personal Details screen. All fields are editable and persisted using
- * SharedPreferences (no Firebase is present in the project yet).
+ * Personal Details screen. All text fields are loaded from and saved to the
+ * signed-in user's Firestore document under users/{uid}; only the profile
+ * photo is persisted locally with SharedPreferences.
  */
 public class PersonalDetailsActivity extends AppCompatActivity {
 
@@ -60,6 +66,7 @@ public class PersonalDetailsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_personal_details);
+        PressEffect.attachToButtons(findViewById(android.R.id.content));
 
         // --- Toolbar back navigation ---
         MaterialToolbar toolbar = findViewById(R.id.toolbar);
@@ -90,6 +97,12 @@ public class PersonalDetailsActivity extends AppCompatActivity {
         setupGenderDropdown();
         setupDatePicker();
         loadSavedProfile();
+
+        // Email belongs to the Firebase account and can't be edited here
+        // without re-authentication, so show it read-only.
+        inputEmail.setEnabled(false);
+
+        loadUserFromFirestore();
 
         // --- Photo picker (tap the photo itself) ---
         profilePhoto.setOnClickListener(v -> openImagePicker());
@@ -126,20 +139,48 @@ public class PersonalDetailsActivity extends AppCompatActivity {
         });
     }
 
-    /** Loads any previously saved profile values. */
+    /** Restores the locally stored profile photo, if any. */
     private void loadSavedProfile() {
         SharedPreferences prefs = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
-        inputName.setText(prefs.getString("name", ""));
-        inputEmail.setText(prefs.getString("email", ""));
-        inputMobile.setText(prefs.getString("mobile", ""));
-        inputGender.setText(prefs.getString("gender", ""), false);
-        inputDob.setText(prefs.getString("dob", ""));
-        inputAddress.setText(prefs.getString("address", ""));
-
         String imageUri = prefs.getString(PROFILE_IMAGE_KEY, null);
         if (imageUri != null) {
             profilePhoto.setImageURI(Uri.parse(imageUri));
         }
+    }
+
+    /** Loads the signed-in user's profile from their Firestore document. */
+    private void loadUserFromFirestore() {
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        if (currentUser == null) {
+            return;
+        }
+        String uid = currentUser.getUid();
+
+        FirebaseFirestore.getInstance()
+                .collection("users")
+                .document(uid)
+                .get()
+                .addOnSuccessListener(doc -> {
+                    if (doc.exists()) {
+                        String name = doc.getString("name");
+                        String email = doc.getString("email");
+                        String mobile = doc.getString("mobile");
+                        String gender = doc.getString("gender");
+                        String dob = doc.getString("dob");
+                        String address = doc.getString("address");
+                        inputName.setText(name != null ? name : "");
+                        inputEmail.setText(email != null ? email : currentUser.getEmail());
+                        inputMobile.setText(mobile != null ? mobile : "");
+                        inputGender.setText(gender != null ? gender : "", false);
+                        inputDob.setText(dob != null ? dob : "");
+                        inputAddress.setText(address != null ? address : "");
+                    } else {
+                        // Fallback to Auth data if the Firestore doc is somehow missing.
+                        inputEmail.setText(currentUser.getEmail());
+                    }
+                })
+                .addOnFailureListener(e ->
+                        android.util.Log.e("PersonalDetails", "Failed to load profile", e));
     }
 
     /** Opens the system gallery to choose a new profile photo. */
@@ -158,20 +199,38 @@ public class PersonalDetailsActivity extends AppCompatActivity {
         return true;
     }
 
-    /** Persists the profile to SharedPreferences. */
+    /** Persists the profile to Firestore. */
     private void saveProfile() {
-        SharedPreferences.Editor editor = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE).edit();
-        editor.putString("name", inputName.getText().toString().trim());
-        editor.putString("email", inputEmail.getText().toString().trim());
-        editor.putString("mobile", inputMobile.getText().toString().trim());
-        editor.putString("gender", inputGender.getText().toString().trim());
-        editor.putString("dob", inputDob.getText().toString().trim());
-        editor.putString("address", inputAddress.getText().toString().trim());
+        String name = inputName.getText().toString().trim();
+        String email = inputEmail.getText().toString().trim();
+        String mobile = inputMobile.getText().toString().trim();
+        String gender = inputGender.getText().toString().trim();
+        String dob = inputDob.getText().toString().trim();
+        String address = inputAddress.getText().toString().trim();
 
         // Mirror name/email so the Profile header stays in sync.
-        editor.putString("user_name", inputName.getText().toString().trim());
-        editor.putString("user_email", inputEmail.getText().toString().trim());
-        editor.apply();
+        getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+                .edit()
+                .putString("user_name", name)
+                .putString("user_email", email)
+                .apply();
+
+        // Persist all editable fields to the user's Firestore document in one update.
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        if (currentUser != null) {
+            Map<String, Object> updates = new HashMap<>();
+            updates.put("name", name);
+            updates.put("mobile", mobile);
+            updates.put("gender", gender);
+            updates.put("dob", dob);
+            updates.put("address", address);
+            FirebaseFirestore.getInstance()
+                    .collection("users")
+                    .document(currentUser.getUid())
+                    .update(updates)
+                    .addOnFailureListener(e ->
+                            android.util.Log.e("PersonalDetails", "Failed to update profile", e));
+        }
 
         Snackbar.make(findViewById(android.R.id.content), getString(R.string.profile_saved), Snackbar.LENGTH_SHORT).show();
     }

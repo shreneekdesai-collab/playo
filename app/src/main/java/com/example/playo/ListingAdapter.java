@@ -10,16 +10,18 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
+import com.bumptech.glide.Glide;
 import java.util.ArrayList;
 
 /**
  * RecyclerView adapter for the list of turf listings owned by the user.
- * Supports Edit / Delete actions per row.
+ * Supports View / Edit / Delete actions per row.
  */
 public class ListingAdapter extends RecyclerView.Adapter<ListingAdapter.Binding> {
 
     /** Row actions exposed to the hosting screen. */
     public interface ListingActionListener {
+        void onView(TurfListing listing);
         void onEdit(TurfListing listing);
         void onDelete(TurfListing listing);
     }
@@ -56,6 +58,9 @@ public class ListingAdapter extends RecyclerView.Adapter<ListingAdapter.Binding>
     public Binding onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.item_listing, parent, false);
+        PressEffect.attach(view);
+        PressEffect.attach(view.findViewById(R.id.btnEdit));
+        PressEffect.attach(view.findViewById(R.id.btnDelete));
         return new Binding(view);
     }
 
@@ -63,7 +68,19 @@ public class ListingAdapter extends RecyclerView.Adapter<ListingAdapter.Binding>
     public void onBindViewHolder(@NonNull Binding holder, int position) {
         TurfListing listing = listings.get(position);
 
-        holder.image.setImageResource(listing.getImageRes());
+        if (listing.getThumbnailBytes() != null) {
+            Glide.with(holder.image.getContext())
+                    .load(listing.getThumbnailBytes())
+                    .placeholder(listing.getImageRes())
+                    .into(holder.image);
+        } else if (listing.getImageUrl() != null) {
+            Glide.with(holder.image.getContext())
+                    .load(listing.getImageUrl())
+                    .placeholder(listing.getImageRes())
+                    .into(holder.image);
+        } else {
+            holder.image.setImageResource(listing.getImageRes());
+        }
         holder.name.setText(listing.getTurfName());
         holder.price.setText("₹" + (int) listing.getPrice() + " / Hour");
         holder.bookings.setText("Bookings: " + listing.getTotalBookings());
@@ -78,6 +95,11 @@ public class ListingAdapter extends RecyclerView.Adapter<ListingAdapter.Binding>
             holder.availability.setText("Unavailable");
             holder.availability.setTextColor(ContextCompat.getColor(context, R.color.status_cancelled));
         }
+
+        // Row click opens the turf detail page.
+        holder.itemView.setOnClickListener(v -> {
+            if (listener != null) listener.onView(listing);
+        });
 
         holder.itemView.findViewById(R.id.btnEdit).setOnClickListener(v -> {
             if (listener != null) listener.onEdit(listing);

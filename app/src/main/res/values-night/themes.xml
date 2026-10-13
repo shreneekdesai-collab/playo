@@ -1,7 +1,37 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. -->
-    <style name="Base.Theme.CUTCUT" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your dark theme here. -->
-        <!-- <item name="colorPrimary">@color/my_dark_primary</item> -->
+    <style name="Theme.PLAYO" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorOnPrimary">@color/button_text</item>
+        <item name="colorSecondary">@color/colorSecondary</item>
+        <item name="colorOnSecondary">@color/button_text</item>
+        <item name="android:statusBarColor">@color/screen_bg</item>
+        <item name="android:navigationBarColor">@color/screen_bg</item>
+        <item name="android:windowLightStatusBar">false</item>
+        <item name="android:windowLightNavigationBar">false</item>
+        <item name="android:windowBackground">@color/screen_bg</item>
+        <item name="android:windowAnimationStyle">@style/PlayZo.ActivityAnimation</item>
+        <item name="materialCardViewStyle">@style/Widget.Material3.CardView.Elevated</item>
+    </style>
+
+    <style name="Theme.PLAYO.Toolbar" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorOnPrimary">@color/button_text</item>
+        <item name="colorSecondary">@color/colorSecondary</item>
+        <item name="colorOnSecondary">@color/button_text</item>
+        <item name="android:statusBarColor">@color/toolbar_bg</item>
+        <item name="android:navigationBarColor">@color/screen_bg</item>
+        <item name="android:windowLightStatusBar">false</item>
+        <item name="android:windowLightNavigationBar">false</item>
+        <item name="android:windowBackground">@color/screen_bg</item>
+        <item name="android:windowAnimationStyle">@style/PlayZo.ActivityAnimation</item>
+    </style>
+
+    <style name="PlayZo.ActivityAnimation" parent="@android:style/Animation.Activity">
+        <item name="android:activityOpenEnterAnimation">@anim/slide_in_right</item>
+        <item name="android:activityOpenExitAnimation">@anim/slide_out_left</item>
+        <item name="android:activityCloseEnterAnimation">@anim/slide_in_left</item>
+        <item name="android:activityCloseExitAnimation">@anim/slide_out_right</item>
     </style>
 </resources>

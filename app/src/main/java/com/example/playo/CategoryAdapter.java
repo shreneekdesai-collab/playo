@@ -35,6 +35,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.category_item, parent, false);
+        PressEffect.attach(view);
         return new ViewHolder(view);
     }
 

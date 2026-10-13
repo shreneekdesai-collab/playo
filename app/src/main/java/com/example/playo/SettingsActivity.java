@@ -18,8 +18,8 @@ import com.google.android.material.switchmaterial.SwitchMaterial;
  */
 public class SettingsActivity extends AppCompatActivity {
 
-    private static final String PREFS_NAME = "playo_prefs";
-    private static final String KEY_DARK_MODE = "dark_mode";
+    private static final String PREFS_NAME = PlayzoApp.PREFS_NAME;
+    private static final String KEY_DARK_MODE = PlayzoApp.KEY_DARK_MODE;
     private static final String KEY_NOTIFICATIONS = "notifications_enabled";
 
     @Override
@@ -48,7 +48,12 @@ public class SettingsActivity extends AppCompatActivity {
         SwitchMaterial switchNotifications = findViewById(R.id.switchNotifications);
 
         // Restore saved states.
-        boolean darkMode = getSharedPreferences(PREFS_NAME, MODE_PRIVATE).getBoolean(KEY_DARK_MODE, false);
+        boolean hasSavedDarkMode = getSharedPreferences(PREFS_NAME, MODE_PRIVATE).contains(KEY_DARK_MODE);
+        boolean darkMode = hasSavedDarkMode
+                ? getSharedPreferences(PREFS_NAME, MODE_PRIVATE).getBoolean(KEY_DARK_MODE, false)
+                : (getResources().getConfiguration().uiMode
+                & android.content.res.Configuration.UI_MODE_NIGHT_MASK)
+                == android.content.res.Configuration.UI_MODE_NIGHT_YES;
         boolean notifications = getSharedPreferences(PREFS_NAME, MODE_PRIVATE).getBoolean(KEY_NOTIFICATIONS, true);
         switchDarkMode.setChecked(darkMode);
         switchNotifications.setChecked(notifications);

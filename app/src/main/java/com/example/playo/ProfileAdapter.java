@@ -45,6 +45,7 @@ public class ProfileAdapter extends RecyclerView.Adapter<ProfileAdapter.ViewHold
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.item_profile_option, parent, false);
+        PressEffect.attach(view);
         return new ViewHolder(view);
     }
 
